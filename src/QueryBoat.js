@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Auths from './page/auth'
+import Login from './page/from/login'
+import Signup from './page/from/signup'
 import Home from './page/Home'
 import { Container } from './w3chat.style'
 
@@ -10,8 +11,9 @@ const QueryBoat = () => {
         <Container>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/auth' element={<Auths />} />
                     <Route path='/' element={<Home />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup' element={<Signup />} />
                 </Routes>
             </BrowserRouter>
         </Container>
