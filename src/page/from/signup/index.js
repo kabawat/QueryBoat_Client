@@ -33,7 +33,6 @@ const Signup = () => {
             [name]: value
         })
     }
-    // const { otp, email, username, password } = 
 
     // password show and hide 
     const [pwdShow, setPwdShow] = useState('password')
@@ -42,6 +41,7 @@ const Signup = () => {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return pattern.test(email);
     }
+
     const sendOtp = async () => {
         const { email } = formData
         try {
@@ -53,7 +53,6 @@ const Signup = () => {
                 axios.post('https://queryboat-api.onrender.com/sendotp', { email }).then((respoce) => {
                     if (respoce.data.status) {
                         setError({
-                            ...error,
                             email: null
                         })
                         setIsOtp(true)
@@ -61,7 +60,6 @@ const Signup = () => {
                     }
                 }).catch((error) => {
                     setError({
-                        ...error,
                         email: error?.response?.data?.massage
                     })
                     setIsLoader(false)
@@ -72,7 +70,6 @@ const Signup = () => {
         } catch (error) {
             setIsLoader(false)
             setError({
-                ...error,
                 email: error.message
             })
         }
@@ -87,7 +84,7 @@ const Signup = () => {
             if (otp.length !== 6) {
                 throw new Error('please enter valid OTP')
             }
-            setError({ ...error, otp: null })
+            setError({ otp: null })
             setIsLoader(true)
             axios.post('https://queryboat-api.onrender.com/verify-email', { email, otp }).then((responce) => {
                 if (responce.data.status) {
@@ -96,34 +93,69 @@ const Signup = () => {
                 }
             }).catch((error) => {
                 setIsLoader(false)
-                setError({ ...error, otp: error?.response?.data?.message })
+                setError({ otp: error?.response?.data?.message })
             })
 
         } catch (error) {
             setIsLoader(false)
-            setError({ ...error, otp: error?.message })
+            setError({ otp: error?.message })
         }
     }
 
+    const userEmailValidation = (username, password) => {
+        if (!username || !password) {
+            if (!username && !password) {
+                setError({
+                    username: 'username is required',
+                    password: 'password is required'
+                })
+            } else if (!username) {
+                setError({
+                    username: 'username is required',
+                })
+            } else {
+                setError({
+                    password: 'password is required'
+                })
+            }
+            return false
+        }
+
+        if (username.length < 3 && password.length < 6) {
+            setError({
+                username: 'username length must be 3 letter',
+                password: 'password length must be 6 letter'
+            })
+            return false
+        }
+
+        if (username.length < 3) {
+            setError({
+                username: 'username length must be 3 letter',
+            })
+            return false
+        }
+        if (password.length < 6) {
+            setError({
+                password: 'password length must be 6 letter'
+            })
+            return false
+        }
+        setError({})
+        return true
+    }
     // username and password 
     const NextStep = () => {
+        const { username, password } = formData
         try {
-            if (!username || username.trim().length < 3) {
-                throw new Error('Please enter a username with at least 3 characters.')
+            const isValid = userEmailValidation(username, password)
+            if (!isValid) {
+                throw new Error(false)
             }
-            if (!password || password.trim().length < 6) {
-                throw new Error('Please enter a password with at least 6 characters.')
-            }
-            setError({ ...error, username: null, password: null })
-            setIsLoader(true)
-            // make the API call or perform other actions
+            setStep('image')
+
         } catch (error) {
-            setIsLoader(false)
-            if (error.message.includes('username')) {
-                setError({ ...error, username: error.message })
-            } else {
-                setError({ ...error, password: error.message })
-            }
+
         }
     }
 
@@ -132,13 +164,20 @@ const Signup = () => {
             <section className="container forms">
                 <div className="form login">
                     {
-                        <button className='back-btn' onClick={() => setStep('email')}>
+                        step === 'username' && <button className='back-btn' onClick={() => setStep('email')}>
+                            <span><BsArrowLeft /></span>
+                        </button>
+                    }
+                    {
+                        step === 'image' && <button className='back-btn' onClick={() => setStep('username')}>
                             <span><BsArrowLeft /></span>
                         </button>
                     }
 
                     <div className="form-content">
-                        <div className='form-heading'>Verify Email</div>
+                        {step === "email" && <div className='form-heading'>Verify Email</div>}
+                        {step === "username" && <div className='form-heading'>Personal Details</div>}
+                        {step === "image" && <div className='form-heading'>Profile Picture </div>}
                         <form id='signup'>
                             {
                                 (step === "email") && <>
