@@ -1,16 +1,32 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import Loader from '../../../components/loader/Loader'
 import "../style.css"
 import { BsArrowLeft, BsFacebook } from 'react-icons/bs'
 import axios from 'axios'
 import { ThreeDots } from 'react-loader-spinner'
-import { AiOutlinePlus } from 'react-icons/ai'
+import { BsPlusLg } from 'react-icons/bs'
+import { useCookies } from 'react-cookie'
+import { useEffect } from 'react'
 const Signup = () => {
+    const navigate = useNavigate()
+    const [cookies, setCookies] = useCookies()
+    const [isRender, setIsRender] = useState(false)
+
+    useEffect(() => {
+        if (cookies?.token) {
+            navigate('/')
+        } else {
+            setIsRender(true)
+        }
+    }, [])
+
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)
 
     const [step, setStep] = useState('email') //next 
-    const [handalImage, setHandalImage] = useState()
+    const [imgFile, setImgFile] = useState('')
+    const [file, setFile] = useState()
     // error state manage 
     const [error, setError] = useState({
         email: "",
@@ -37,6 +53,7 @@ const Signup = () => {
 
     // password show and hide 
     const [pwdShow, setPwdShow] = useState('password')
+
     // send otp handaler 
     function isValidEmail(email) {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,6 +93,7 @@ const Signup = () => {
         }
     }
 
+    // verify email 
     const verifyEmail = () => {
         const { email, otp } = formData
         try {
@@ -102,6 +120,7 @@ const Signup = () => {
             setError({ otp: error?.message })
         }
     }
+
 
     const userEmailValidation = (username, password) => {
         if (!username || !password) {
@@ -145,6 +164,7 @@ const Signup = () => {
         setError({})
         return true
     }
+
     // username and password 
     const NextStep = () => {
         const { username, password } = formData
@@ -160,12 +180,54 @@ const Signup = () => {
         }
     }
 
-    // image 
-    const handalChangeImage = (event) => {
-        console.log(event.target.files)
+    const handalImage = (event) => {
+        {
+            const file = event.target.files[0];
+            setFile(file)
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                const base64String = reader.result;
+                setImgFile(base64String);
+            };
+        }
     }
+
+    // handal submit 
+    const handalSubmit = (event) => {
+        event.preventDefault();
+        setIsLoader(true);
+        setError({});
+
+        try {
+            const finalData = new FormData();
+            finalData.append("username", formData.username);
+            finalData.append("password", formData.password);
+            finalData.append("email", formData.email);
+
+            if (event.target.id === "signup") {
+                if (!file) {
+                    setError({ image: "upload profile picture" });
+                    throw new Error("upload profile picture");
+                }
+                finalData.append("profile", file);
+                // Send the data to the server
+                axios.post(`https://queryboat-api.onrender.com/registration`, finalData).then((response) => {
+                    setCookies('token', response?.data?.token)
+                    setIsLoader(false);
+                }).catch((error) => {
+                    setIsLoader(false);
+                    setError({ image: error?.response?.data?.massage });
+                });
+            }
+        } catch (error) {
+            setIsLoader(false);
+            setError({ image: error?.message });
+        }
+    };
+
     return (
-        <div>
+        isRender ? <div>
             <section className="container forms">
                 <div className="form login">
                     {
@@ -174,16 +236,25 @@ const Signup = () => {
                         </button>
                     }
                     {
-                        step === 'image' && <button className='back-btn' onClick={() => setStep('username')}>
-                            <span><BsArrowLeft /></span>
-                        </button>
+                        step === 'image' && <div className='topArrow'>
+                            <button className='back-btn' onClick={() => {
+                                setStep('username')
+                                setImgFile('')
+                                setFile('')
+                            }}>
+                                <span><BsArrowLeft /></span>
+                            </button>
+                            <button className='skip-btn' type='button' id='skipImage' onClick={handalSubmit}>
+                                <span>skip</span>
+                            </button>
+                        </div>
                     }
 
                     <div className="form-content">
                         {step === "email" && <div className='form-heading'>Verify Email</div>}
                         {step === "username" && <div className='form-heading'>Personal Details</div>}
                         {step === "image" && <div className='form-heading'>Profile Picture </div>}
-                        <form id='signup'>
+                        <form id='signup' onSubmit={handalSubmit}>
                             {
                                 (step === "email") && <>
                                     {/* Email */}
@@ -249,35 +320,41 @@ const Signup = () => {
                                         <label htmlFor="pwd" > show password</label>
                                     </div>
                                     {error?.password && <span className='error'>{error?.password}</span>}
-                                    {isLoader ?
-                                        <div className="field button-field">
-                                            <button className='form-loader form-btn' type='button'>
-                                                <ThreeDots
-                                                    height="60"
-                                                    width="60"
-                                                    radius="9"
-                                                    color="#fff"
-                                                    ariaLabel="three-dots-loading"
-                                                    visible={true}
-                                                />
-                                            </button>
-                                        </div> : <div className="field button-field">
-                                            <button className='form-btn' type='button' onClick={NextStep}>
-                                                Next
-                                            </button>
-                                        </div>
-                                    }
+                                    {isLoader ? <div className="field button-field">
+                                        <button className='form-loader form-btn' type='button'>
+                                            <ThreeDots height="60" width="60" radius="9" color="#fff" ariaLabel="three-dots-loading" visible={true} />
+                                        </button>
+                                    </div> : <div className="field button-field">
+                                        <button className='form-btn' type='button' onClick={NextStep}>
+                                            Next
+                                        </button>
+                                    </div>}
                                 </>
                             }{
                                 (step === "image") && <>
-                                    <input type='file' id='profilePic' value={handalImage} onChange={handalChangeImage} accept='image/*' />
-                                    <label htmlFor='profilePic' className='profile-image'>
-                                        {
-                                            handalImage ? <img src={handalImage} alt="" className="previewImg" /> : <AiOutlinePlus />
-                                        }
-                                    </label>
+                                    <div className='form-image_container'>
+                                        <label htmlFor='imageFile' className='form-image_profile'>
+                                            {imgFile ? <img src={imgFile} /> : <BsPlusLg />}
+                                        </label>
+                                        <input id='imageFile' type='file' onChange={handalImage} accept='image/*' />
+                                    </div>
+                                    {error?.image && <div className='error' style={{ textAlign: 'center', margin: '10px 0px' }}>{error?.image}</div>}
+                                    {
+                                        isLoader ?
+                                            <div className="field button-field">
+                                                <button className='form-loader form-btn' type='button'>
+                                                    <ThreeDots height="60" width="60" radius="9" color="#fff" ariaLabel="three-dots-loading" visible={true} />
+                                                </button>
+                                            </div> : <div className="field button-field">
+                                                <button className='form-btn' type={'submit'}>
+                                                    Continue
+                                                </button>
+                                            </div>
+                                    }
                                 </>
+
                             }
+
                         </form>
 
                         <div className="form-link">
@@ -303,7 +380,7 @@ const Signup = () => {
 
                 </div >
             </section >
-        </div >
+        </div > : <Loader />
     )
 }
 
