@@ -4,12 +4,13 @@ import "../style.css"
 import { BsArrowLeft, BsFacebook } from 'react-icons/bs'
 import axios from 'axios'
 import { ThreeDots } from 'react-loader-spinner'
+import { AiOutlinePlus } from 'react-icons/ai'
 const Signup = () => {
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)
 
     const [step, setStep] = useState('email') //next 
-
+    const [handalImage, setHandalImage] = useState()
     // error state manage 
     const [error, setError] = useState({
         email: "",
@@ -159,6 +160,10 @@ const Signup = () => {
         }
     }
 
+    // image 
+    const handalChangeImage = (event) => {
+        console.log(event.target.files)
+    }
     return (
         <div>
             <section className="container forms">
@@ -262,6 +267,15 @@ const Signup = () => {
                                             </button>
                                         </div>
                                     }
+                                </>
+                            }{
+                                (step === "image") && <>
+                                    <input type='file' id='profilePic' value={handalImage} onChange={handalChangeImage} accept='image/*' />
+                                    <label htmlFor='profilePic' className='profile-image'>
+                                        {
+                                            handalImage ? <img src={handalImage} alt="" className="previewImg" /> : <AiOutlinePlus />
+                                        }
+                                    </label>
                                 </>
                             }
                         </form>
