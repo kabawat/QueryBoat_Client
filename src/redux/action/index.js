@@ -43,7 +43,7 @@ export const chatData = (payload) => {
     }
 }
 
-// delete massage one by one 
+// delete message one by one 
 export const deleteMsg = (payload) => {
     return {
         type: 'DELETE_MSG',

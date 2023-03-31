@@ -225,8 +225,8 @@ export const Send = styled(Button)`
     }
 `
 
-// chat Area massage 
-export const MassageContaienr = styled(Div)`
+// chat Area message 
+export const messageContaienr = styled(Div)`
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -249,7 +249,7 @@ export const ChatBox = styled(Div)`
     flex-direction: ${({ isMe }) => isMe ? 'row-reverse' : 'row'};
     
     `
-export const MassageOuter = styled(Div)`
+export const messageOuter = styled(Div)`
     max-width: 60%;
     position: relative;
     border-radius: 20px;
@@ -269,7 +269,7 @@ export const HiddenInput = styled(Div)`
     height: 100%;
     background: transparent;
 `
-export const Massage = styled(Div)`
+export const message = styled(Div)`
     padding: 10px 20px;
     width: 100%;
     height: 100%;

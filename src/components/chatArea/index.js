@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Massage, MassageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MassageOuter } from '../style'
+import { ChatBox, message, messageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, messageOuter } from '../style'
 import dp from '../../assets/user1.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
@@ -19,24 +19,24 @@ const Chat = ({ curItem }) => {
             <ChatDp>
                 <Image src={dp} />
             </ChatDp>
-            <MassageOuter onContextMenu={curItem.handaleContextMenu} isMe={curItem.isMe}>
-                <Massage isMe={curItem?.isMe} >
+            <messageOuter onContextMenu={curItem.handaleContextMenu} isMe={curItem.isMe}>
+                <message isMe={curItem?.isMe} >
                     <Msg>
-                        {curItem?.massage}
+                        {curItem?.message}
                     </Msg>
                     <Time>
                         {date}
                     </Time>
-                </Massage>
+                </message>
                 <HiddenInput id={id} />
-            </MassageOuter>
+            </messageOuter>
         </ChatBox>
     )
 }
 
 const ChatArea = () => {
     const Dispatch = useDispatch()
-    const { chatMassage, receiverProfile } = useSelector(state => state)
+    const { chatmessage, receiverProfile } = useSelector(state => state)
     const [conActive, setConActive] = useState(false)
     const [conTextMsg, setConTextMsg] = useState()
     const innerChatArea = useRef(null)
@@ -85,9 +85,9 @@ const ChatArea = () => {
     const scroll = useRef(null)
     useEffect(() => {
         scroll.current.scrollIntoView()
-    }, [chatMassage])
+    }, [chatmessage])
     return (
-        <MassageContaienr ref={innerChatArea}>
+        <messageContaienr ref={innerChatArea}>
             <ContextContainer active={conActive} left={mouse.x} top={mouse.y}>
                 <ContextAction>
                     <Button>
@@ -104,7 +104,7 @@ const ChatArea = () => {
                 <ContextAction>
                     <Button>
                         <MdOutlineAddReaction />
-                        <span>React to massage</span>
+                        <span>React to message</span>
                     </Button>
                 </ContextAction>
                 <ContextAction>
@@ -127,13 +127,13 @@ const ChatArea = () => {
                 </ContextAction>
             </ContextContainer>
             {/* ------------------ */}
-            <Chat curItem={{ isMe: true, massage: "hello", time: 2349234982348, handaleContextMenu }} />
-            <Chat curItem={{ isMe: false, massage: "hello", time: 2349234982348, handaleContextMenu }} />
-            <Chat curItem={{ isMe: true, massage: "hello", time: 2349234982348, handaleContextMenu }} />
-            <Chat curItem={{ isMe: false, massage: "hello", time: 2349234982348, handaleContextMenu }} />
+            <Chat curItem={{ isMe: true, message: "hello", time: 2349234982348, handaleContextMenu }} />
+            <Chat curItem={{ isMe: false, message: "hello", time: 2349234982348, handaleContextMenu }} />
+            <Chat curItem={{ isMe: true, message: "hello", time: 2349234982348, handaleContextMenu }} />
+            <Chat curItem={{ isMe: false, message: "hello", time: 2349234982348, handaleContextMenu }} />
             {/* ------------------ */}
             <div ref={scroll} id="scroll"></div>
-        </MassageContaienr>
+        </messageContaienr>
     )
 }
 

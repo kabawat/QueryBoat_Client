@@ -86,7 +86,7 @@ const ChatMode = () => {
                             <Button ><RiDeleteBinLine /> <span>Delete</span></Button>
                         </ContextAction>
                         <ContextAction>
-                            <Button ><AiOutlineClear /> <span>Clear massage</span></Button>
+                            <Button ><AiOutlineClear /> <span>Clear message</span></Button>
                         </ContextAction>
                     </ContaxtMenu>
                     {

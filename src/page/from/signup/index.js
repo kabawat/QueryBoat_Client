@@ -80,7 +80,7 @@ const Signup = () => {
                     }
                 }).catch((error) => {
                     setError({
-                        email: error?.response?.data?.massage
+                        email: error?.response?.data?.message
                     })
                     setIsLoader(false)
                 })
@@ -219,7 +219,7 @@ const Signup = () => {
                     setIsLoader(false);
                 }).catch((error) => {
                     setIsLoader(false);
-                    setError({ image: error?.response?.data?.massage });
+                    setError({ image: error?.response?.data?.message });
                 });
             }
         } catch (error) {
