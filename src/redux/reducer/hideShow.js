@@ -4,3 +4,6 @@ export const asideAction = (state = true, action) => {
     }
     return state
 }   
+export const BaseUrl = (state = 'http://localhost:2917', action) => {
+    return state
+}   

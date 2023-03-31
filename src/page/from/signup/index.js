@@ -8,8 +8,10 @@ import { ThreeDots } from 'react-loader-spinner'
 import { BsPlusLg } from 'react-icons/bs'
 import { useCookies } from 'react-cookie'
 import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 const Signup = () => {
     const navigate = useNavigate()
+    const { BaseUrl } = useSelector(state => state)
     const [cookies, setCookies] = useCookies()
     const [isRender, setIsRender] = useState(false)
 
@@ -68,7 +70,7 @@ const Signup = () => {
                     throw new Error('Enter valid email')
                 }
                 setIsLoader(true)
-                axios.post('https://queryboat-api.onrender.com/sendotp', { email }).then((respoce) => {
+                axios.post(`${BaseUrl}/sendotp`, { email }).then((respoce) => {
                     if (respoce.data.status) {
                         setError({
                             email: null
@@ -105,7 +107,7 @@ const Signup = () => {
             }
             setError({ otp: null })
             setIsLoader(true)
-            axios.post('https://queryboat-api.onrender.com/verify-email', { email, otp }).then((responce) => {
+            axios.post(`${BaseUrl}/verify-email`, { email, otp }).then((responce) => {
                 if (responce.data.status) {
                     setIsLoader(false)
                     setStep('username')
@@ -212,7 +214,7 @@ const Signup = () => {
                 }
                 finalData.append("profile", file);
                 // Send the data to the server
-                axios.post(`https://queryboat-api.onrender.com/registration`, finalData).then((response) => {
+                axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
                     setCookies('token', response?.data?.token)
                     setIsLoader(false);
                 }).catch((error) => {
@@ -221,7 +223,7 @@ const Signup = () => {
                 });
             }
         } catch (error) {
-            setIsLoader(false);
+            setIsLoader(false); 
             setError({ image: error?.message });
         }
     };
