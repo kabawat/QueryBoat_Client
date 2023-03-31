@@ -9,7 +9,7 @@ import { Container } from './w3chat.style'
 const QueryBoat = () => {
     return (
         <Container>
-            <BrowserRouter>
+            <BrowserRouter basename='/'>
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='*' element={<Home />} />
