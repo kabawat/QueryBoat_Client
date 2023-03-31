@@ -3,7 +3,7 @@ export const asideAction = (state = true, action) => {
         return action.payload
     }
     return state
-}   
-export const BaseUrl = (state = 'http://localhost:2917', action) => {
+}
+export const BaseUrl = (state = 'https://queryboat-api.onrender.com', action) => {
     return state
 }   
