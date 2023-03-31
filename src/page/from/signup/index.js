@@ -16,8 +16,10 @@ const Signup = () => {
     const [isRender, setIsRender] = useState(false)
 
     useEffect(() => {
-        if (cookies?.token) {
-            navigate('/')
+        if (cookies?.auth) {
+            setTimeout(() => {
+                navigate('/')
+            }, 2000);
         } else {
             setIsRender(true)
         }
@@ -54,7 +56,7 @@ const Signup = () => {
     }
 
     // password show and hide 
-    const [pwdShow, setPwdShow] = useState('password')
+    const [pwdShow, setPwdShow] = useState(true)
 
     // send otp handaler 
     function isValidEmail(email) {
@@ -175,7 +177,20 @@ const Signup = () => {
             if (!isValid) {
                 throw new Error(false)
             }
-            setStep('image')
+            axios.post(`${BaseUrl}/verify-username`, { username }).then((result) => {
+                if (result?.data?.status) {
+                    setError({})
+                    setStep('image')
+                } else {
+                    setError({
+                        username: 'somthing wrong',
+                    })
+                }
+            }).catch((error) => {
+                setError({
+                    username: error?.response?.data?.message,
+                })
+            })
 
         } catch (error) {
 
@@ -193,6 +208,7 @@ const Signup = () => {
                 setImgFile(base64String);
             };
         }
+        setError({})
     }
 
     // handal submit 
@@ -206,7 +222,6 @@ const Signup = () => {
             finalData.append("username", formData.username);
             finalData.append("password", formData.password);
             finalData.append("email", formData.email);
-
             if (event.target.id === "signup") {
                 if (!file) {
                     setError({ image: "upload profile picture" });
@@ -215,15 +230,32 @@ const Signup = () => {
                 finalData.append("profile", file);
                 // Send the data to the server
                 axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
-                    setCookies('token', response?.data?.token)
+                    const { username, token } = response?.data
+                    setCookies('auth', {
+                        username, token
+                    })
                     setIsLoader(false);
+                    navigate('/')
+                }).catch((error) => {
+                    setIsLoader(false);
+                    setError({ image: error?.response?.data?.message });
+                });
+            } else {
+                axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
+                    const { username, token } = response?.data
+                    setCookies('auth', {
+                        username, token
+                    })
+                    setIsLoader(false);
+                    setIsRender(false)
+                    navigate('/')
                 }).catch((error) => {
                     setIsLoader(false);
                     setError({ image: error?.response?.data?.message });
                 });
             }
         } catch (error) {
-            setIsLoader(false); 
+            setIsLoader(false);
             setError({ image: error?.message });
         }
     };
@@ -263,7 +295,7 @@ const Signup = () => {
                                     <div className="field input-field">
                                         <input type="email" value={formData?.email} name="email"
                                             placeholder="Email" className="input input-contaroll"
-                                            onChange={handalChange}
+                                            onChange={handalChange} suggested="current-email"
                                         />
                                     </div>
                                     {error?.email && <span className='error'>{error?.email}</span>}
@@ -274,6 +306,7 @@ const Signup = () => {
                                             <input type="text" placeholder="OTP"
                                                 className="input input-contaroll"
                                                 name='otp'
+                                                suggested="current-otp"
                                                 value={formData?.otp} onChange={handalChange}
                                             />
                                         </div>
@@ -304,22 +337,25 @@ const Signup = () => {
                                     <div className="field input-field">
                                         <input type="text" value={formData?.username} name="username"
                                             placeholder="Username" className="input input-contaroll"
-                                            onChange={handalChange}
+                                            onChange={handalChange} suggested="current-username"
                                         />
                                     </div>
                                     {error?.username && <span className='error'>{error?.username}</span>}
 
                                     <div className="field input-field">
-                                        <input type={pwdShow} value={formData?.password} name="password"
-                                            placeholder='password' className="input input-contaroll"
+                                        <input type={pwdShow ? 'password' : 'text'} value={formData?.password} name="password"
+                                            placeholder='password'
+                                            suggested="current-password"
+                                            className="input input-contaroll"
                                             onChange={handalChange}
                                         />
                                     </div>
+                                    {error?.password && <span className='error'>{error?.password}</span>}
                                     <div className="input-field-check">
                                         <input type="checkbox" id='pwd'
-                                            onChange={() => setPwdShow((pwdShow === 'password') ? 'text' : 'password')}
+                                            onChange={() => setPwdShow(!pwdShow)}
                                             className='inupt-checked' />
-                                        <label htmlFor="pwd" > show password</label>
+                                        <label htmlFor="pwd" >{pwdShow ? 'show' : 'hide'}  password</label>
                                     </div>
                                     {error?.password && <span className='error'>{error?.password}</span>}
                                     {isLoader ? <div className="field button-field">
@@ -367,17 +403,17 @@ const Signup = () => {
                     <div className="line"></div>
 
                     <div className="media-options">
-                        <a href="/assets/facebook.webp" className="field facebook">
+                        <button className="field facebook" type="button">
                             <span className="google-img"><BsFacebook /></span>
                             <span>Login with Facebook</span>
-                        </a>
+                        </button>
                     </div>
 
                     <div className="media-options">
-                        <a href="#" className="field google">
+                        <button className="field google" type="button">
                             <img src="/assets/google.png" alt="" className="google-img" />
                             <span>Login with Google</span>
-                        </a>
+                        </button>
                     </div>
 
                 </div >

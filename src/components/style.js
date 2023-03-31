@@ -226,7 +226,7 @@ export const Send = styled(Button)`
 `
 
 // chat Area message 
-export const messageContaienr = styled(Div)`
+export const MessageContaienr = styled(Div)`
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -249,7 +249,7 @@ export const ChatBox = styled(Div)`
     flex-direction: ${({ isMe }) => isMe ? 'row-reverse' : 'row'};
     
     `
-export const messageOuter = styled(Div)`
+export const MessageOuter = styled(Div)`
     max-width: 60%;
     position: relative;
     border-radius: 20px;
@@ -269,7 +269,7 @@ export const HiddenInput = styled(Div)`
     height: 100%;
     background: transparent;
 `
-export const message = styled(Div)`
+export const Message = styled(Div)`
     padding: 10px 20px;
     width: 100%;
     height: 100%;

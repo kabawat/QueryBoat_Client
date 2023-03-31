@@ -18,7 +18,6 @@ const ProfileModal = ({ mouse, section }) => {
     const [activeBtn, setActiveBtn] = useState(section)
     const handalClick = (active) => {
         setActiveBtn(active)
-        console.log(active)
     }
     const partOfSetting = {
         General: <General />,

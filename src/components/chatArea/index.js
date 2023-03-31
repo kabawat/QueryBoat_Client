@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, message, messageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, messageOuter } from '../style'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter } from '../style'
 import dp from '../../assets/user1.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
@@ -19,17 +19,17 @@ const Chat = ({ curItem }) => {
             <ChatDp>
                 <Image src={dp} />
             </ChatDp>
-            <messageOuter onContextMenu={curItem.handaleContextMenu} isMe={curItem.isMe}>
-                <message isMe={curItem?.isMe} >
+            <MessageOuter onContextMenu={curItem.handaleContextMenu} isMe={curItem.isMe}>
+                <Message isMe={curItem?.isMe} >
                     <Msg>
                         {curItem?.message}
                     </Msg>
                     <Time>
                         {date}
                     </Time>
-                </message>
+                </Message>
                 <HiddenInput id={id} />
-            </messageOuter>
+            </MessageOuter>
         </ChatBox>
     )
 }
@@ -87,7 +87,7 @@ const ChatArea = () => {
         scroll.current.scrollIntoView()
     }, [chatmessage])
     return (
-        <messageContaienr ref={innerChatArea}>
+        <MessageContaienr ref={innerChatArea}>
             <ContextContainer active={conActive} left={mouse.x} top={mouse.y}>
                 <ContextAction>
                     <Button>
@@ -133,7 +133,7 @@ const ChatArea = () => {
             <Chat curItem={{ isMe: false, message: "hello", time: 2349234982348, handaleContextMenu }} />
             {/* ------------------ */}
             <div ref={scroll} id="scroll"></div>
-        </messageContaienr>
+        </MessageContaienr>
     )
 }
 

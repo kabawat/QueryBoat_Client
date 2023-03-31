@@ -178,18 +178,18 @@
     padding: 0 15px;
 }
 
-.media-options a {
+.media-options button {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-a.facebook {
+button.facebook {
     color: #fff;
     background-color: #4267b2;
 }
 
-a.facebook .facebook-icon {
+button.facebook .facebook-icon {
     height: 28px;
     width: 28px;
     color: #0171d3;
@@ -215,11 +215,11 @@ a.facebook .facebook-icon {
     object-fit: cover;
 }
 
-a.google {
+button.google {
     border: 1px solid #CACACA;
 }
 
-a.google span {
+button.google span {
     font-weight: 500;
     opacity: 0.6;
     color: #232836;
