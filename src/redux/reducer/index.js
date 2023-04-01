@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
 import { asideAction, BaseUrl } from "./hideShow";
-import myProfile from "./userProfile";
+import { userProfile } from "./profile";
 const rootReducer = combineReducers(
     {
-        myProfile,
+        BaseUrl,
+        userProfile,
         asideAction,
-        BaseUrl
     }
 );
 export default rootReducer;

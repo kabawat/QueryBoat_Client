@@ -12,8 +12,8 @@ const Profile = () => {
     }
     const [isEditEmail, setIsEditEmail] = useState(false)
     const [isEditUser, setIsEditUser] = useState(false)
-    const { myProfile } = useSelector(state => state)
-    const { profile } = myProfile;
+    const { userProfile, BaseUrl } = useSelector(state => state)
+    const profile = userProfile;
     const [data, setData] = useState({ ...profile })
     const handalChange = (event) => {
         const { name, value } = event.target
@@ -27,7 +27,7 @@ const Profile = () => {
             <UserDpSection>
                 <DpContainer>
                     <DpImage>
-                        <Image src={Dp} />
+                        <Image src={`${BaseUrl}${data?.profile_image}`} />
                     </DpImage>
                     <DpMenu onClick={HowDpSetting} active={isDpSetting}>
                         <span>
@@ -50,7 +50,7 @@ const Profile = () => {
                         Username
                     </TitleBox>
                     <EditBox isEditEmail={isEditUser}>
-                        <input type="text" readOnly={!isEditUser} onChange={handalChange} name="user" value={data.user} />
+                        <input type="text" readOnly={!isEditUser} onChange={handalChange} name="user" value={data?.username} />
                     </EditBox>
                 </InfoGroup>
                 {isEditUser ? <EditButton onClick={() => setIsEditUser(false)}>
@@ -80,5 +80,4 @@ const Profile = () => {
 
     )
 }
-
 export default Profile

@@ -4,6 +4,8 @@ export const asideAction = (state = true, action) => {
     }
     return state
 }
-export const BaseUrl = (state = 'https://queryboat-api.onrender.com', action) => {
+const url = `https://queryboat-api.onrender.com`
+// const url = 'http://localhost:2917'
+export const BaseUrl = (state = url, action) => {
     return state
 }   

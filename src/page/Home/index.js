@@ -9,19 +9,31 @@ import HeaderBody from '../../components/header'
 import ChatArea from '../../components/chatArea'
 import FooterBody from '../../components/footer'
 import { Aside, ChatContainer, Container, Header, Main, Footer, ChatAreaContainer } from './style'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
+import { myProfile } from '../../redux/action'
+import axios from 'axios'
 
 const Home = () => {
-    // const { receiverProfile } = useSelector(state => state)
-    const navigate = useNavigate()
-    const [cookies] = useCookies()
+    const { BaseUrl, userProfile } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
+    const [cookies, , removeCookies] = useCookies()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     useEffect(() => {
-        if (cookies?.auth) {
-            setIsRender(true)
-        } else {
-            navigate('/login')
+        console.log()
+        if (userProfile?.username === '') {
+            axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
+                headers: { token: cookies?.auth?.token }
+            }).then((responce) => {
+                dispatch(myProfile(responce?.data?.data))
+                setIsRender(true)
+            }).catch((error) => {
+                console.log(error)
+                removeCookies('auth')
+                navigate('/login')
+            })
+            // userProfile
         }
     }, [])
     return (
