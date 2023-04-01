@@ -3,11 +3,13 @@ import { NavLink, useNavigate, } from 'react-router-dom'
 import "../style.css"
 import { BsFacebook } from 'react-icons/bs'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useCookies } from 'react-cookie'
 import Loader from '../../../components/loader/Loader'
+import { myProfile } from '../../../redux/action'
 const Login = () => {
     const { BaseUrl } = useSelector(state => state)
+    const dispatch = useDispatch()
     const [error, setError] = useState({})
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [pwdShow, setPwdShow] = useState(true)
@@ -73,10 +75,18 @@ const Login = () => {
         if (isValid) {
             axios.post(`${BaseUrl}/login`, formData).then((Response) => {
                 const { username, token } = Response?.data
-                setCookies('auth', {
-                    username, token
+                axios.get(`${BaseUrl}/profile/${username}`, {
+                    headers: { token: token }
+                }).then((result) => {
+                    console.log(result)
+                    dispatch(myProfile(result?.data?.data))
+                    setCookies('auth', {
+                        username, token
+                    })
+                    navigate('/')
+                }).catch((error) => {
+                    console.log(error)
                 })
-                navigate('/')
             }).catch((error) => {
                 setError({
                     password: error?.response?.data?.message

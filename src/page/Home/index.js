@@ -21,19 +21,18 @@ const Home = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     useEffect(() => {
-        console.log()
-        if (userProfile?.username === '') {
+        if (cookies?.auth) {
             axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
                 headers: { token: cookies?.auth?.token }
             }).then((responce) => {
                 dispatch(myProfile(responce?.data?.data))
                 setIsRender(true)
             }).catch((error) => {
-                console.log(error)
-                removeCookies('auth')
-                navigate('/login')
+                // removeCookies('auth')
+                // navigate('/login')
             })
-            // userProfile
+        } else {
+            navigate('/login')
         }
     }, [])
     return (

@@ -8,12 +8,14 @@ import { ThreeDots } from 'react-loader-spinner'
 import { BsPlusLg } from 'react-icons/bs'
 import { useCookies } from 'react-cookie'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { myProfile } from '../../../redux/action'
 const Signup = () => {
     const navigate = useNavigate()
     const { BaseUrl } = useSelector(state => state)
     const [cookies, setCookies] = useCookies()
     const [isRender, setIsRender] = useState(false)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (cookies?.auth) {
@@ -211,7 +213,25 @@ const Signup = () => {
         setError({})
     }
 
+
+
     // handal submit 
+    const register = (finalData) => {
+        axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
+            console.log('response: ', response)
+            const { token, username, email, profile_image } = response?.data
+            // dispatch(myProfile({ username, email, profile_image }))
+            setCookies('auth', {
+                username, token
+            })
+            console.log('signup here: ',)
+            navigate('/')
+            setIsLoader(false);
+        }).catch((error) => {
+            setIsLoader(false);
+            setError({ image: error?.response?.data?.message });
+        });
+    }
     const handalSubmit = (event) => {
         event.preventDefault();
         setIsLoader(true);
@@ -228,31 +248,9 @@ const Signup = () => {
                     throw new Error("upload profile picture");
                 }
                 finalData.append("profile", file);
-                // Send the data to the server
-                axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
-                    const { username, token } = response?.data
-                    setCookies('auth', {
-                        username, token
-                    })
-                    setIsLoader(false);
-                    navigate('/')
-                }).catch((error) => {
-                    setIsLoader(false);
-                    setError({ image: error?.response?.data?.message });
-                });
+                register(finalData)
             } else {
-                axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
-                    const { username, token } = response?.data
-                    setCookies('auth', {
-                        username, token
-                    })
-                    setIsLoader(false);
-                    setIsRender(false)
-                    navigate('/')
-                }).catch((error) => {
-                    setIsLoader(false);
-                    setError({ image: error?.response?.data?.message });
-                });
+                register(finalData)
             }
         } catch (error) {
             setIsLoader(false);
