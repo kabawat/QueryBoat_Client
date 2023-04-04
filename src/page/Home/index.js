@@ -13,14 +13,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
 import { myProfile } from '../../redux/action'
 import axios from 'axios'
-
 const Home = () => {
-    const { BaseUrl, userProfile } = useSelector(state => state)
+    const { BaseUrl, userProfile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
     const [cookies, , removeCookies] = useCookies()
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
     useEffect(() => {
+        console.log(cookies)
+        socket.on('connect', () => {
+            socket.emit('refresh', { username: cookies?.auth?.username, id: socket.id })
+        })
+
         if (cookies?.auth) {
             axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
                 headers: { token: cookies?.auth?.token }
@@ -28,8 +33,8 @@ const Home = () => {
                 dispatch(myProfile(responce?.data?.data))
                 setIsRender(true)
             }).catch((error) => {
-                // removeCookies('auth')
-                // navigate('/login')
+                removeCookies('auth')
+                navigate('/login')
             })
         } else {
             navigate('/login')

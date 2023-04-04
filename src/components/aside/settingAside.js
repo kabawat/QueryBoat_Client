@@ -45,6 +45,7 @@ const SettingAside = () => {
             setIsProfile(false)
         }
     })
+    
     return (
         <SettingAsideContainer>
             <AsideTab>

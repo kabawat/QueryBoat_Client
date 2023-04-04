@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { myProfile } from '../../../redux/action'
 const Signup = () => {
     const navigate = useNavigate()
-    const { BaseUrl } = useSelector(state => state)
+    const { BaseUrl, socket } = useSelector(state => state)
     const [cookies, setCookies] = useCookies()
     const [isRender, setIsRender] = useState(false)
     const dispatch = useDispatch()
@@ -188,7 +188,6 @@ const Signup = () => {
                     username: error?.response?.data?.message,
                 })
             })
-
         } catch (error) {
 
         }
@@ -216,6 +215,7 @@ const Signup = () => {
             setCookies('auth', {
                 username, token
             })
+            socket.emit('New User Join', { id: socket.id, username: username })
             navigate('/')
             setIsLoader(false);
         }).catch((error) => {

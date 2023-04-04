@@ -5,7 +5,6 @@ import Signup from './page/from/signup'
 import Home from './page/Home'
 import { Container } from './w3chat.style'
 
-
 const QueryBoat = () => {
     return (
         <Container>
