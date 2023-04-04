@@ -29,10 +29,10 @@ const Signup = () => {
 
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)
-
     const [step, setStep] = useState('email') //next 
     const [imgFile, setImgFile] = useState('')
     const [file, setFile] = useState()
+    const [loginData, setLoginData] = useState('')
     // error state manage 
     const [error, setError] = useState({
         email: "",
@@ -172,22 +172,17 @@ const Signup = () => {
     }
 
     // username and password 
-    const NextStep = () => {
-        const { username, password } = formData
+    const signup = () => {
+        const { username, password, email } = formData
         try {
             const isValid = userEmailValidation(username, password)
             if (!isValid) {
                 throw new Error(false)
             }
-            axios.post(`${BaseUrl}/verify-username`, { username }).then((result) => {
-                if (result?.data?.status) {
-                    setError({})
-                    setStep('image')
-                } else {
-                    setError({
-                        username: 'somthing wrong',
-                    })
-                }
+            axios.post(`${BaseUrl}/signup`, { username, password, email }).then((result) => {
+                setLoginData(result?.data)
+                setError({})
+                setStep('image')
             }).catch((error) => {
                 setError({
                     username: error?.response?.data?.message,
@@ -200,16 +195,14 @@ const Signup = () => {
     }
 
     const handalImage = (event) => {
-        {
-            const file = event.target.files[0];
-            setFile(file)
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                const base64String = reader.result;
-                setImgFile(base64String);
-            };
-        }
+        const file = event.target.files[0];
+        setFile(file)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            const base64String = reader.result;
+            setImgFile(base64String);
+        };
         setError({})
     }
 
@@ -217,14 +210,12 @@ const Signup = () => {
 
     // handal submit 
     const register = (finalData) => {
-        axios.post(`${BaseUrl}/registration`, finalData).then((response) => {
-            console.log('response: ', response)
-            const { token, username, email, profile_image } = response?.data
-            // dispatch(myProfile({ username, email, profile_image }))
+        axios.post(`${BaseUrl}/update_profile_picture`, finalData).then((response) => {
+
+            const { username, token } = loginData
             setCookies('auth', {
                 username, token
             })
-            console.log('signup here: ',)
             navigate('/')
             setIsLoader(false);
         }).catch((error) => {
@@ -232,16 +223,14 @@ const Signup = () => {
             setError({ image: error?.response?.data?.message });
         });
     }
+
     const handalSubmit = (event) => {
         event.preventDefault();
         setIsLoader(true);
         setError({});
-
         try {
             const finalData = new FormData();
-            finalData.append("username", formData.username);
-            finalData.append("password", formData.password);
-            finalData.append("email", formData.email);
+            finalData.append("email", formData?.email);
             if (event.target.id === "signup") {
                 if (!file) {
                     setError({ image: "upload profile picture" });
@@ -250,6 +239,7 @@ const Signup = () => {
                 finalData.append("profile", file);
                 register(finalData)
             } else {
+                finalData.append('image', true)
                 register(finalData)
             }
         } catch (error) {
@@ -361,8 +351,8 @@ const Signup = () => {
                                             <ThreeDots height="60" width="60" radius="9" color="#fff" ariaLabel="three-dots-loading" visible={true} />
                                         </button>
                                     </div> : <div className="field button-field">
-                                        <button className='form-btn' type='button' onClick={NextStep}>
-                                            Next
+                                        <button className='form-btn' type='button' onClick={signup}>
+                                            save
                                         </button>
                                     </div>}
                                 </>

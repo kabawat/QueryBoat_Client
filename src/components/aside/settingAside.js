@@ -3,14 +3,14 @@ import { SettingAsideContainer, AsideTab, AsideTabBtn, UserSetting, UserActionBo
 import { BsChatLeftText } from 'react-icons/bs'
 import { HiStatusOnline } from 'react-icons/hi';
 import { IoSettingsOutline } from 'react-icons/io5';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { storyMode } from '../../redux/action'
 import { Image } from '../../style';
 import userProfiileDp from '../../assets/user2.jpg'
 import ProfileModal from '../../modals/userProfileModal';
 const SettingAside = () => {
-
+    const { userProfile, BaseUrl } = useSelector(state => state)
     const Dispatch = useDispatch()
     const [isActive, SetIsActive] = useState(true)
     const [isSetting, setIsSetting] = useState(false)
@@ -63,7 +63,8 @@ const SettingAside = () => {
                 </UserActionBox>
                 <DpSection>
                     <UserActionBox onClick={hadalProfile}>
-                        <Image src={userProfiileDp} />
+                        {/* <Image src={userProfiileDp} /> */}
+                        <Image src={`${BaseUrl}${userProfile?.profile_image}`} />
                     </UserActionBox>
                 </DpSection>
             </UserSetting>

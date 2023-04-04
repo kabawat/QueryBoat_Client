@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlineClear } from 'react-icons/ai'
 import { BsPin } from 'react-icons/bs'
+import { useSelector } from 'react-redux'
 const ChatMode = () => {
     const [context, setContext] = useState(false)
     const [userList, setUserList] = useState([])
