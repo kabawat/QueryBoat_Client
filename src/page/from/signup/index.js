@@ -215,7 +215,7 @@ const Signup = () => {
             setCookies('auth', {
                 username, token
             })
-            socket.emit('New User Join', { id: socket.id, username: username })
+            socket.emit('New User Join', { username: username })
             navigate('/')
             setIsLoader(false);
         }).catch((error) => {

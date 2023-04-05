@@ -21,11 +21,9 @@ const Home = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        console.log(cookies)
         socket.on('connect', () => {
-            socket.emit('refresh', { username: cookies?.auth?.username, id: socket.id })
+            cookies?.auth && socket.emit('refresh', { username: cookies?.auth?.username })
         })
-
         if (cookies?.auth) {
             axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
                 headers: { token: cookies?.auth?.token }
