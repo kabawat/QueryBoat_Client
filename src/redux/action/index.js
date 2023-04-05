@@ -20,5 +20,10 @@ export const currentChat = (payload) => {
         payload
     }
 }
-
 // chat contact list 
+export const AllChat = (payload) => {
+    return {
+        type: 'CHAT_LIST',
+        payload
+    }
+}

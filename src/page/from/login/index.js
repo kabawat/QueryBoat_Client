@@ -8,7 +8,7 @@ import { useCookies } from 'react-cookie'
 import Loader from '../../../components/loader/Loader'
 import { myProfile } from '../../../redux/action'
 const Login = () => {
-    const { BaseUrl } = useSelector(state => state)
+    const { BaseUrl, socket } = useSelector(state => state)
     const dispatch = useDispatch()
     const [error, setError] = useState({})
     const [formData, setFormData] = useState({ email: '', password: '' })
@@ -78,11 +78,11 @@ const Login = () => {
                 axios.get(`${BaseUrl}/profile/${username}`, {
                     headers: { token: token }
                 }).then((result) => {
-                    console.log(result)
                     dispatch(myProfile(result?.data?.data))
                     setCookies('auth', {
                         username, token
                     })
+                    socket.emit('refresh', username)
                     navigate('/')
                 }).catch((error) => {
                     console.log(error)

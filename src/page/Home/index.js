@@ -22,7 +22,7 @@ const Home = () => {
 
     useEffect(() => {
         socket.on('connect', () => {
-            cookies?.auth && socket.emit('refresh', { username: cookies?.auth?.username })
+            cookies?.auth && socket.emit('refresh', cookies?.auth?.username)
         })
         if (cookies?.auth) {
             axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
