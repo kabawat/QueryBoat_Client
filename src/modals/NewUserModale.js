@@ -4,21 +4,34 @@ import { Image } from '../style.js'
 import { SubTitle, AddUser, SearchContainer, NewUserName, AddUserHeading, ContactList, ContactItem, NewUserDp, TagLine, NewUserModale, } from './modale.style.js'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AllChat } from '../redux/action'
+import { all_contact } from '../redux/action'
 import axios from 'axios'
+import { useCookies } from 'react-cookie'
 const NewChatModal = ({ state }) => {
     const { mouse } = state
+    const [cookies] = useCookies()
     const dispatch = useDispatch()
-    const { BaseUrl, chatList, userProfile, } = useSelector(state => state)
+    const { BaseUrl, contactlist, userProfile, } = useSelector(state => state)
     const userHandal = async (payload) => {
-        console.log(payload)
+        const chat = {
+            image: payload?.profile_image,
+            sender: cookies?.auth?.username,
+            receiver: payload?.username
+        }
+        axios.post(`${BaseUrl}/new_chat`, chat, {
+            headers: { token: cookies?.auth?.token }
+        }).then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            console.log(error?.response)
+        })
     }
     // 
     //
 
     useEffect(() => {
-        axios.get(`${BaseUrl}/chatlist`).then(res => {
-            dispatch(AllChat(res?.data?.data))
+        axios.get(`${BaseUrl}/contact_list`).then(res => {
+            dispatch(all_contact(res?.data?.data))
         })
     }, [])
 
@@ -33,7 +46,7 @@ const NewChatModal = ({ state }) => {
                 <ContactList>
                     {/* ---------- */}
                     {
-                        chatList?.map((curChat, keys) => {
+                        contactlist?.map((curChat, keys) => {
                             return <ContactItem key={keys} onClick={() => userHandal(curChat)}>
                                 <NewUserDp>
                                     <Image src={`${BaseUrl}${curChat?.profile_image}`} />

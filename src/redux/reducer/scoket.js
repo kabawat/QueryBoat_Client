@@ -14,9 +14,31 @@ const socket = (state = socketInit, action) => {
 }
 export default socket
 
-const data = []
-export const chatList = (state = data, action) => {
+
+// contact list 
+export const contactlist = (state = [], action) => {
+    if (action.type === 'CONTACT_LIST') {
+        return action.payload
+    }
+    return state
+}
+
+// chat list 
+export const chatList = (state = [], action) => {
     if (action.type === 'CHAT_LIST') {
+        return action.payload
+    }
+    return state
+}
+
+// current chat 
+export const curChat = (state = {
+    email: '',
+    receiver: '',
+    image: '',
+    chatID: ''
+}, action) => {
+    if (action.type === 'CURRENT_CHAT') {
         return action.payload
     }
     return state

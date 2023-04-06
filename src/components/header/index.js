@@ -3,17 +3,21 @@ import { Image } from '../../style'
 import { HeaderSection, UserDetails, UserDp, UserInfo, UserName, UserStatus, SettingSection, SettingToggle, ListContaienr } from '../style'
 import userdp from '../../assets/user2.jpg'
 import { HiDotsVertical } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
 const HeaderBody = () => {
-    const [showList, setShowList] = useState(false)
+    const [showList, setShowList,] = useState(false)
+    const { curChat } = useSelector(state => state)
     return (
         <HeaderSection>
             <UserInfo>
                 <UserDp>
-                    <Image src={userdp} />
+                    <Image src={curChat?.image} />
                 </UserDp>
                 <UserDetails>
                     <UserName>
-                        Mukesh Singh
+                        {
+                            curChat?.receiver
+                        }
                     </UserName>
                     <UserStatus>
                         online
@@ -32,6 +36,7 @@ const HeaderBody = () => {
                         top={showList ? '135%' : '100%'}
                         delay={showList ? 0.2 : 0}
                     >
+                        setting list
                     </ListContaienr>
                 </SettingSection>
             </UserInfo>

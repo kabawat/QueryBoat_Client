@@ -11,10 +11,10 @@ import FooterBody from '../../components/footer'
 import { Aside, ChatContainer, Container, Header, Main, Footer, ChatAreaContainer } from './style'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
-import { myProfile } from '../../redux/action'
+import { chatList, myProfile } from '../../redux/action'
 import axios from 'axios'
 const Home = () => {
-    const { BaseUrl, userProfile, socket } = useSelector(state => state)
+    const { BaseUrl, curChat, userProfile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
     const [cookies, , removeCookies] = useCookies()
     const dispatch = useDispatch()
@@ -25,6 +25,7 @@ const Home = () => {
             cookies?.auth && socket.emit('refresh', cookies?.auth?.username)
         })
         if (cookies?.auth) {
+            // user profile 
             axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
                 headers: { token: cookies?.auth?.token }
             }).then((responce) => {
@@ -33,6 +34,14 @@ const Home = () => {
             }).catch((error) => {
                 removeCookies('auth')
                 navigate('/login')
+            })
+            // user chat list 
+            axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
+                headers: { token: cookies?.auth?.token }
+            }).then((res) => {
+                dispatch(chatList(res?.data?.data))
+            }).catch((error) => {
+
             })
         } else {
             navigate('/login')
@@ -44,17 +53,20 @@ const Home = () => {
                 <ChatAside />
             </Aside>
             <Main>
-                <ChatContainer>
-                    <Header>
-                        <HeaderBody />
-                    </Header>
-                    <ChatAreaContainer>
-                        <ChatArea />
-                    </ChatAreaContainer>
-                    <Footer>
-                        <FooterBody />
-                    </Footer>
-                </ChatContainer>
+                {
+                    curChat?.receiver !== '' ? <ChatContainer>
+                        <Header>
+                            <HeaderBody />
+                        </Header>
+                        <ChatAreaContainer>
+                            <ChatArea />
+                        </ChatAreaContainer>
+                        <Footer>
+                            <FooterBody />
+                        </Footer>
+                    </ChatContainer> : <NoChat />
+                }
+
             </Main>
         </Container> : <Loader />
     )

@@ -7,13 +7,21 @@ import { BsThreeDots } from 'react-icons/bs';
 import { Button, ContextAction, Image } from '../../style'
 import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { AiOutlineClear } from 'react-icons/ai'
+import { AiOutlineClear, AiOutlineConsoleSql } from 'react-icons/ai'
 import { BsPin } from 'react-icons/bs'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useCookies } from 'react-cookie'
+import axios from 'axios'
+import { currentChat } from '../../redux/action'
 const ChatMode = () => {
-    const [context, setContext] = useState(false)
-    const [userList, setUserList] = useState([])
+    const { chatList, curChat, BaseUrl } = useSelector(state => state)
+    const dispatch = useDispatch()
     const [isNewChatModal, setIsNewChatModal] = useState(false)
+    const [cookies] = useCookies()
+
+    const [context, setContext] = useState(false)
+    const [curContext, setCurContext] = useState({})
     const [mouse, setMouse] = useState({
         x: 0,
         y: 0
@@ -25,8 +33,21 @@ const ChatMode = () => {
         }
     })
 
-    const getFriendProfile = () => {
-
+    const getFriendProfile = (payload) => {
+        axios.get(`${BaseUrl}/receiver/${payload?.receiver}`, {
+            headers: { token: cookies?.auth?.token }
+        }).then((response) => {
+            const { email, chatID } = response?.data?.data
+            const { receiver, image } = payload
+            dispatch(currentChat({
+                email,
+                chatID,
+                receiver,
+                image: `${BaseUrl}${image}`
+            }))
+        }).catch(error => {
+            console.log(error?.response?.data)
+        })
     }
 
     const hadalSearchModale = (event) => {
@@ -62,9 +83,8 @@ const ChatMode = () => {
                             <Label id='new_user'></Label>
                         </NewChat>
                         {
-                            isNewChatModal ? <NewChatModal state={{ userList, mouse }} /> : null
+                            isNewChatModal ? <NewChatModal state={{ mouse }} /> : null
                         }
-
                     </NewChatContainer>
                     {/* new user action  */}
                     <NewChatContainer>
@@ -91,30 +111,29 @@ const ChatMode = () => {
                         </ContextAction>
                     </ContaxtMenu>
                     {
-                        <UserCartContainer
-                            active=''
-                            onContextMenu={handalContextMenu}
-                            id=''
-                            title=''
-                            key=''
-                        >
-                            <UserChatDp>
-                                <Image src={dp} />
-                            </UserChatDp>
-                            <ChatLinkContainer>
-                                <UserInfo onClick={() => getFriendProfile()}>
-                                    <UserName>Nirma Kanwar</UserName>
-                                    <ChatPreview>
-                                        last seen 10:12 PM
-                                    </ChatPreview>
-                                    <Label id='' title=''></Label>
-                                </UserInfo>
-                            </ChatLinkContainer>
-                        </UserCartContainer>
+                        chatList?.map((curUser, keys) => {
+                            return <UserCartContainer key={keys} UserCartContainer active={curChat?.receiver === curUser?.receiver ? true : false} onContextMenu={(event) => {
+                                handalContextMenu(event)
+                                setCurContext(curUser)
+                            }} id='' title=''>
+                                <UserChatDp>
+                                    <Image src={`${BaseUrl}${curUser?.image}`} />
+                                </UserChatDp>
+                                <ChatLinkContainer>
+                                    <UserInfo onClick={() => getFriendProfile(curUser)}>
+                                        <UserName>{curUser?.receiver}</UserName>
+                                        <ChatPreview>
+                                            last seen 10:12 PM
+                                        </ChatPreview>
+                                        <Label id='' title=''></Label>
+                                    </UserInfo>
+                                </ChatLinkContainer>
+                            </UserCartContainer>
+                        })
                     }
                 </ChatContainer>
             </ChatMainCotainer>
-        </ChatMainContainer>
+        </ChatMainContainer >
     )
 }
 
