@@ -11,7 +11,7 @@ import FooterBody from '../../components/footer'
 import { Aside, ChatContainer, Container, Header, Main, Footer, ChatAreaContainer } from './style'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
-import { chat_List, myProfile } from '../../redux/action'
+import { chat_List, fetch_chat, myProfile, store_message } from '../../redux/action'
 import axios from 'axios'
 const Home = () => {
     const { BaseUrl, curChat, userProfile, socket } = useSelector(state => state)
@@ -21,13 +21,12 @@ const Home = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        socket.on('connect', () => {
-            cookies?.auth && socket.emit('refresh', cookies?.auth?.username)
-        })
         if (cookies?.auth) {
             // user profile 
             axios.get(`${BaseUrl}/profile/${cookies?.auth?.username}`, {
-                headers: { token: cookies?.auth?.token }
+                headers: {
+                    token: cookies?.auth?.token
+                }
             }).then((responce) => {
                 dispatch(myProfile(responce?.data?.data))
                 setIsRender(true)
@@ -35,6 +34,7 @@ const Home = () => {
                 removeCookies('auth')
                 navigate('/login')
             })
+
             // user chat list 
             axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
                 headers: { token: cookies?.auth?.token }
@@ -46,6 +46,38 @@ const Home = () => {
         } else {
             navigate('/login')
         }
+
+        // socket handle 
+        socket.on('connect', () => {
+            cookies?.auth && socket.emit('refresh', cookies?.auth?.username)
+            // when received message 
+            socket.on('Received Message', chat => {
+                // store data in localStorage 
+                dispatch(store_message(chat?.receiver, {
+                    message: chat?.message,
+                    time: chat?.time,
+                    isMe: false
+                }))
+            })
+
+            // received message from new chat 
+            socket.on('Received New Chat', chat => {
+                axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
+                    headers: { token: cookies?.auth?.token }
+                }).then((res) => {
+                    // fetch chat list 
+                    dispatch(chat_List(res?.data?.data))
+                    // store data in localStorage 
+                    dispatch(store_message(chat?.receiver, {
+                        message: chat?.message,
+                        time: chat?.time,
+                        isMe: false
+                    }))
+                }).catch((error) => {
+
+                })
+            })
+        })
     }, [])
     return (
         isRender ? <Container>

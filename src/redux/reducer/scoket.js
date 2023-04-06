@@ -32,14 +32,16 @@ export const chatList = (state = [], action) => {
 }
 
 // current chat 
-export const curChat = (state = {
+const data = {
     email: '',
     receiver: '',
     image: '',
     chatID: ''
-}, action) => {
+}
+export const curChat = (state = data, action) => {
     if (action.type === 'CURRENT_CHAT') {
         return action.payload
     }
     return state
 }
+

@@ -4,9 +4,15 @@ import { BsPlusLg, BsFileEarmarkPdf } from 'react-icons/bs';
 import { IoSendSharp, IoVideocamOutline } from 'react-icons/io5';
 import { IoIosMusicalNotes } from 'react-icons/io';
 import { BiImages } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie'
+import { fetch_chat, store_message } from '../../redux/action';
 const FooterBody = () => {
+    const { socket, curChat, userProfile } = useSelector(state => state)
+    const dispatch = useDispatch()
     const [showFile, setShowFile] = useState(false)
     const [typeMsg, setTypeMsg] = useState('')
+    const [cookies] = useCookies()
     const typingHandal = (event) => {
         setTypeMsg(event.target.value)
     }
@@ -14,7 +20,26 @@ const FooterBody = () => {
         event.preventDefault()
         setTypeMsg('')
         if (typeMsg) {
-            console.log(typeMsg)
+            const data = {
+                message: typeMsg,
+                time: new Date(),
+                sender: {
+                    username: curChat?.receiver,
+                    chatID: curChat?.chatID,
+                },
+                receiver: {
+                    image: userProfile?.profile_image,
+                    username: userProfile?.username,
+                },
+            }
+            socket.emit('Send Message', data)
+            const chat = {
+                message: typeMsg,
+                time: new Date(),
+                isMe: true
+            }
+            dispatch(store_message(curChat?.receiver, chat))
+            dispatch(fetch_chat(curChat?.receiver))
         }
     }
 
@@ -62,7 +87,7 @@ const FooterBody = () => {
             </ChatTypeContaienr>
             {/* right  */}
             <ChatActionCotainer>
-                <Send type='submit'>
+                <Send type='submit' >
                     <IoSendSharp />
                 </Send>
             </ChatActionCotainer>

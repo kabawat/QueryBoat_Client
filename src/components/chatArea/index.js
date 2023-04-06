@@ -35,8 +35,8 @@ const Chat = ({ curItem }) => {
 }
 
 const ChatArea = () => {
+    const { chatMessage, receiverProfile, socket } = useSelector(state => state)
     const Dispatch = useDispatch()
-    const { chatmessage, receiverProfile } = useSelector(state => state)
     const [conActive, setConActive] = useState(false)
     const [conTextMsg, setConTextMsg] = useState()
     const innerChatArea = useRef(null)
@@ -44,7 +44,6 @@ const ChatArea = () => {
         x: 0,
         y: 0
     })
-
     useEffect(() => {
         if (receiverProfile) {
             Dispatch(currentChat(receiverProfile.user))
@@ -85,7 +84,8 @@ const ChatArea = () => {
     const scroll = useRef(null)
     useEffect(() => {
         scroll.current.scrollIntoView()
-    }, [chatmessage])
+    }, [chatMessage])
+
     return (
         <MessageContaienr ref={innerChatArea}>
             <ContextContainer active={conActive} left={mouse.x} top={mouse.y}>
@@ -127,10 +127,12 @@ const ChatArea = () => {
                 </ContextAction>
             </ContextContainer>
             {/* ------------------ */}
-            <Chat curItem={{ isMe: true, message: "hello", time: 2349234982348, handaleContextMenu }} />
-            <Chat curItem={{ isMe: false, message: "hello", time: 2349234982348, handaleContextMenu }} />
-            <Chat curItem={{ isMe: true, message: "hello", time: 2349234982348, handaleContextMenu }} />
-            <Chat curItem={{ isMe: false, message: "hello", time: 2349234982348, handaleContextMenu }} />
+            {
+                chatMessage?.length ? chatMessage?.map((curMsg, keys) => {
+                    const { message, isMe, time } = curMsg
+                    return <Chat key={keys} curItem={{ isMe, message, time, handaleContextMenu }} />
+                }) : 'start chat'
+            }
             {/* ------------------ */}
             <div ref={scroll} id="scroll"></div>
         </MessageContaienr>

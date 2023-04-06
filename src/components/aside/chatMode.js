@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-import { chat_List, currentChat } from '../../redux/action'
+import { chat_List, currentChat, fetch_chat } from '../../redux/action'
 const ChatMode = () => {
     const { chatList, curChat, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -34,6 +34,10 @@ const ChatMode = () => {
     })
 
     const getFriendProfile = (payload) => {
+        //  for fetch curChat and fix Socket.connection issue 
+        localStorage.setItem('curUser', payload?.receiver)
+
+        dispatch(fetch_chat(payload?.receiver))
         axios.get(`${BaseUrl}/receiver/${payload?.receiver}`, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {

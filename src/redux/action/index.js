@@ -36,3 +36,19 @@ export const chat_List = (payload) => {
         payload
     }
 }
+
+// fetch chat 
+export const fetch_chat = (payload) => {
+    return {
+        type: 'GET_CHAT',
+        payload
+    }
+}
+export const store_message = (user, payload, isCurrent) => {
+    return {
+        type: 'STORE_MESSAGE',
+        payload,
+        user,
+        isCurrent
+    }
+}
