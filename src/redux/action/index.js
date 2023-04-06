@@ -30,7 +30,7 @@ export const all_contact = (payload) => {
 }
 
 // chat list handle 
-export const chatList = (payload) => {
+export const chat_List = (payload) => {
     return {
         type: 'CHAT_LIST',
         payload

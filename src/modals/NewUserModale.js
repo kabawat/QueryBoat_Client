@@ -4,7 +4,7 @@ import { Image } from '../style.js'
 import { SubTitle, AddUser, SearchContainer, NewUserName, AddUserHeading, ContactList, ContactItem, NewUserDp, TagLine, NewUserModale, } from './modale.style.js'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { all_contact } from '../redux/action'
+import { all_contact, chat_List } from '../redux/action'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 const NewChatModal = ({ state }) => {
@@ -21,14 +21,17 @@ const NewChatModal = ({ state }) => {
         axios.post(`${BaseUrl}/new_chat`, chat, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {
-            console.log(response)
+            axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
+                headers: { token: cookies?.auth?.token }
+            }).then((res) => {
+                dispatch(chat_List(res?.data?.data))
+            }).catch((error) => {
+                console.log(error?.response)
+            })
         }).catch((error) => {
             console.log(error?.response)
         })
     }
-    // 
-    //
-
     useEffect(() => {
         axios.get(`${BaseUrl}/contact_list`).then(res => {
             dispatch(all_contact(res?.data?.data))

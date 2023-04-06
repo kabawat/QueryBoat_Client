@@ -6,8 +6,7 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { useCookies } from 'react-cookie'
 import Loader from '../../../components/loader/Loader'
-import { myProfile } from '../../../redux/action'
-import { chatList } from '../../../redux/action'
+import { chat_List, myProfile } from '../../../redux/action'
 const Login = () => {
     const { BaseUrl, socket } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -77,7 +76,7 @@ const Login = () => {
         axios.get(`${BaseUrl}/chatList/${username}`, {
             headers: { token }
         }).then((res) => {
-            dispatch(chatList(res?.data?.data))
+            dispatch(chat_List(res?.data?.data))
             socket.emit('refresh', username)
             setCookies('auth', {
                 token, username

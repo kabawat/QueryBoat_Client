@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-import { currentChat } from '../../redux/action'
+import { chat_List, currentChat } from '../../redux/action'
 const ChatMode = () => {
     const { chatList, curChat, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -58,6 +58,7 @@ const ChatMode = () => {
         })
     }
 
+    // context menu 
     const handalContextMenu = (event) => {
         event.preventDefault()
         setContext(!context)
@@ -70,6 +71,32 @@ const ChatMode = () => {
         })
     }
 
+    const handleDelete = () => {
+        const { receiver } = curContext
+        const sender = cookies?.auth?.username
+
+        axios.post(`${BaseUrl}/remove_chat`, { receiver, sender }, {
+            headers: { token: cookies?.auth?.token }
+        }).then((result) => {
+            axios.get(`${BaseUrl}/chatList/${sender}`, {
+                headers: { token: cookies?.auth?.token }
+            }).then((res) => {
+                dispatch(chat_List(res?.data?.data))
+                if (curChat?.receiver === receiver) {
+                    dispatch(currentChat({
+                        email: '',
+                        chatID: '',
+                        receiver: '',
+                        image: ``
+                    }))
+                }
+            }).catch((error) => {
+                console.log(error?.response)
+            })
+        }).catch((error) => {
+            console.log(error?.response)
+        })
+    }
     return (
         <ChatMainContainer>
             {/* chat header  */}
@@ -104,7 +131,7 @@ const ChatMode = () => {
                             <Button><BsPin /> <span>Pin to top</span></Button>
                         </ContextAction>
                         <ContextAction>
-                            <Button ><RiDeleteBinLine /> <span>Delete</span></Button>
+                            <Button onClick={handleDelete}><RiDeleteBinLine /> <span>Delete</span></Button>
                         </ContextAction>
                         <ContextAction>
                             <Button ><AiOutlineClear /> <span>Clear message</span></Button>

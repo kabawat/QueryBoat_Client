@@ -11,7 +11,7 @@ import FooterBody from '../../components/footer'
 import { Aside, ChatContainer, Container, Header, Main, Footer, ChatAreaContainer } from './style'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
-import { chatList, myProfile } from '../../redux/action'
+import { chat_List, myProfile } from '../../redux/action'
 import axios from 'axios'
 const Home = () => {
     const { BaseUrl, curChat, userProfile, socket } = useSelector(state => state)
@@ -39,7 +39,7 @@ const Home = () => {
             axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
                 headers: { token: cookies?.auth?.token }
             }).then((res) => {
-                dispatch(chatList(res?.data?.data))
+                dispatch(chat_List(res?.data?.data))
             }).catch((error) => {
 
             })
