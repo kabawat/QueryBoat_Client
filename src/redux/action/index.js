@@ -44,11 +44,19 @@ export const fetch_chat = (payload) => {
         payload
     }
 }
-export const store_message = (user, payload, isCurrent) => {
+
+// store messge in localStorage 
+export const store_message = (user, payload) => {
     return {
         type: 'STORE_MESSAGE',
         payload,
         user,
-        isCurrent
+    }
+}
+// delete all massage 
+export const delete_message = (payload) => {
+    return {
+        type: 'DELETE_MESSAGE',
+        payload,
     }
 }

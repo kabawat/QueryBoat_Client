@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-import { chat_List, currentChat, fetch_chat } from '../../redux/action'
+import { chat_List, currentChat, delete_message, fetch_chat } from '../../redux/action'
 const ChatMode = () => {
     const { chatList, curChat, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -75,6 +75,7 @@ const ChatMode = () => {
         })
     }
 
+    // handal delete chat
     const handleDelete = () => {
         const { receiver } = curContext
         const sender = cookies?.auth?.username
@@ -94,6 +95,7 @@ const ChatMode = () => {
                         image: ``
                     }))
                 }
+                dispatch(delete_message(receiver))
             }).catch((error) => {
                 console.log(error?.response)
             })
@@ -101,6 +103,14 @@ const ChatMode = () => {
             console.log(error?.response)
         })
     }
+
+    // handal clean chat 
+    const handleClean = () => {
+        const { receiver } = curContext
+        console.log(receiver)
+        dispatch(delete_message(receiver))
+    }
+
     return (
         <ChatMainContainer>
             {/* chat header  */}
@@ -138,7 +148,7 @@ const ChatMode = () => {
                             <Button onClick={handleDelete}><RiDeleteBinLine /> <span>Delete</span></Button>
                         </ContextAction>
                         <ContextAction>
-                            <Button ><AiOutlineClear /> <span>Clear message</span></Button>
+                            <Button ><AiOutlineClear onClick={handleClean} /> <span>Clear message</span></Button>
                         </ContextAction>
                     </ContaxtMenu>
                     {

@@ -3,6 +3,7 @@ const chatMessage = (state = [], action) => {
         const data = JSON.parse(localStorage.getItem([action?.payload]))
         return data
     }
+    // store message 
     if (action.type === 'STORE_MESSAGE') {
         const oldData = JSON.parse(localStorage.getItem([action?.user]))
         if (oldData) {
@@ -10,16 +11,12 @@ const chatMessage = (state = [], action) => {
         } else {
             localStorage.setItem([action.user], JSON.stringify([action?.payload]))
         }
-        const chat = localStorage.getItem('curUser')
-        return JSON.parse(localStorage.getItem([chat]))
     }
-    return state
+    // delete chat 
+    if (action.type === 'DELETE_MESSAGE') {
+        localStorage.removeItem([action?.payload])
+    }
+    const chat = localStorage.getItem('curUser')
+    return chat ? JSON.parse(localStorage.getItem([chat])) : state
 }
 export default chatMessage
-
-export const CurChatMessage = (state = [], action) => {
-    if (action.type === 'GET_CHAT') {
-        const data = JSON.parse(localStorage.getItem([action?.payload]))
-        return data
-    }
-}
