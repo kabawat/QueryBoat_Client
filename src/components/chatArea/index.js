@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter } from '../style'
-import dp from '../../assets/user1.png'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard } from '../style'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { MdContentCopy, MdOutlineAddReaction } from 'react-icons/md'
@@ -9,51 +8,34 @@ import { AiOutlineStar } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { TbArrowForwardUp } from 'react-icons/tb'
-import { currentChat, deleteMsg } from '../../redux/action'
+import { delete_Current_Message } from '../../redux/action'
 import { useRef } from 'react'
-const Chat = ({ curItem }) => {
-    const date = new Date(curItem.time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-    const id = `_${new Date(curItem.time).getTime()}`
-    return (
-        <ChatBox isMe={curItem?.isMe} >
-            <ChatDp>
-                <Image src={dp} />
-            </ChatDp>
-            <MessageOuter onContextMenu={curItem.handaleContextMenu} isMe={curItem.isMe}>
-                <Message isMe={curItem?.isMe} >
-                    <Msg>
-                        {curItem?.message}
-                    </Msg>
-                    <Time>
-                        {date}
-                    </Time>
-                </Message>
-                <HiddenInput id={id} />
-            </MessageOuter>
-        </ChatBox>
-    )
-}
 
 const ChatArea = () => {
-    const { chatMessage, receiverProfile, socket } = useSelector(state => state)
-    const Dispatch = useDispatch()
+    const { chatMessage, userProfile, BaseUrl, curChat } = useSelector(state => state)
     const [conActive, setConActive] = useState(false)
-    const [conTextMsg, setConTextMsg] = useState()
     const innerChatArea = useRef(null)
+    const [curMessage, setCurMessage] = useState({
+        time: '',
+        message: '',
+        keys: ''
+    })
+    const [isReact, setIsReact] = useState(false)
+    const Dispatch = useDispatch()
     const [mouse, setMouse] = useState({
         x: 0,
         y: 0
     })
-    useEffect(() => {
-        if (receiverProfile) {
-            Dispatch(currentChat(receiverProfile.user))
-        }
-    }, [Dispatch, receiverProfile])
 
+
+    const handleCurrentMessage = (payload) => {
+        setCurMessage({
+            ...payload
+        })
+    }
     const handaleContextMenu = (event) => {
-        const _id = event.target.id.split('_')[1]
-        setConTextMsg(new Date(parseInt(_id)))
         event.preventDefault()
+        setIsReact(false)
         const innerSize = innerChatArea.current.clientWidth
         if ((event.pageX - 400) + 190 > innerSize) {
             setMouse({
@@ -70,16 +52,26 @@ const ChatArea = () => {
         setTimeout(() => {
             setConActive(true)
         }, 100)
+
     }
 
     window.addEventListener('click', () => {
         setConActive(false)
     })
 
+    // handle delete individual message 
     const hadaleDeleteMsg = () => {
-        console.log('delete')
+        Dispatch(delete_Current_Message(curMessage?.time))
     }
 
+    // copy clipboard 
+    const copyMessage = async () => {
+        await navigator.clipboard.writeText(curMessage?.message)
+        setIsReact(true)
+        setTimeout(() => {
+            setIsReact(false)
+        }, 1200)
+    }
     // scroll 
     const scroll = useRef(null)
     useEffect(() => {
@@ -96,7 +88,7 @@ const ChatArea = () => {
                     </Button>
                 </ContextAction>
                 <ContextAction>
-                    <Button>
+                    <Button onClick={copyMessage}>
                         <MdContentCopy />
                         <span>Copy</span>
                     </Button>
@@ -130,7 +122,32 @@ const ChatArea = () => {
             {
                 chatMessage?.length ? chatMessage?.map((curMsg, keys) => {
                     const { message, isMe, time } = curMsg
-                    return <Chat key={keys} curItem={{ isMe, message, time, handaleContextMenu }} />
+                    const image = isMe ? `${BaseUrl}${userProfile?.profile_image}` : curChat?.image
+                    const date = new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+                    return (
+                        <ChatBox isMe={isMe} key={keys}>
+                            <ChatDp>
+                                <Image src={image} />
+                            </ChatDp>
+                            <MessageOuter onContextMenu={(event) => {
+                                handaleContextMenu(event)
+                                handleCurrentMessage({ ...curMsg, keys })
+                            }} isMe={isMe}>
+                                <Message isMe={isMe} >
+                                    <Msg>
+                                        {message}
+                                    </Msg>
+                                    <Time>
+                                        {date}
+                                    </Time>
+                                </Message>
+                                <HiddenInput />
+                            </MessageOuter>
+                            <ClipBoard active={curMessage?.keys === keys && isReact ? true : false}>
+                                copied
+                            </ClipBoard>
+                        </ChatBox>
+                    )
                 }) : 'start chat'
             }
             {/* ------------------ */}

@@ -67,7 +67,7 @@ const Home = () => {
                 }).then((res) => {
                     // fetch chat list 
                     dispatch(chat_List(res?.data?.data))
-                    // store data in localStorage 
+                    // store message in localStorage 
                     dispatch(store_message(chat?.receiver, {
                         message: chat?.message,
                         time: chat?.time,

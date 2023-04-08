@@ -247,6 +247,7 @@ export const ChatBox = styled(Div)`
     display: flex;
     align-items: flex-end;
     flex-direction: ${({ isMe }) => isMe ? 'row-reverse' : 'row'};
+    position: relative;
     
     `
 export const MessageOuter = styled(Div)`
@@ -258,6 +259,44 @@ export const MessageOuter = styled(Div)`
     ${({ isMe }) => isMe ? 'border-bottom-right-radius' : 'border-bottom-left-radius'} : 2px;
     overflow: hidden;
 
+`
+export const ClipBoard = styled(Div)`
+    height: 100%;
+    align-self: self-start;
+    border-radius: 5px;
+    margin: 4px 10px;
+    /* color: #fff;
+    background: rgba(0, 0, 0, 0.8); */
+    font-size:14px;
+    padding: 4px;
+    transform: scale(0);
+    animation: ${({ active }) => (active ? 'show 1.2s ease-in' : '')};
+    @keyframes show {
+        0%{
+            transform: scale(0);
+        }
+        10%{
+            transform: scale(1);
+        }
+        15%{
+            transform: scale(1.2);
+        }
+        20%{
+            transform: scale(1);
+        }
+        80%{
+            transform: scale(1);
+        }
+        90%{
+            transform: scale(1.2);
+        }
+        95%{
+            transform: scale(1);
+        }
+        100%{
+            transform: scale(0);
+        }
+    }
 `
 export const HiddenInput = styled(Div)`
     position: absolute;

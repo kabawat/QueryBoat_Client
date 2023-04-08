@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-import { chat_List, currentChat, delete_message, fetch_chat } from '../../redux/action'
+import { chat_List, clean_message, currentChat, delete_message, fetch_chat } from '../../redux/action'
 const ChatMode = () => {
     const { chatList, curChat, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -108,7 +108,7 @@ const ChatMode = () => {
     const handleClean = () => {
         const { receiver } = curContext
         console.log(receiver)
-        dispatch(delete_message(receiver))
+        dispatch(clean_message(receiver))
     }
 
     return (
@@ -148,7 +148,7 @@ const ChatMode = () => {
                             <Button onClick={handleDelete}><RiDeleteBinLine /> <span>Delete</span></Button>
                         </ContextAction>
                         <ContextAction>
-                            <Button ><AiOutlineClear onClick={handleClean} /> <span>Clear message</span></Button>
+                            <Button onClick={handleClean}><AiOutlineClear /> <span>Clear message</span></Button>
                         </ContextAction>
                     </ContaxtMenu>
                     {

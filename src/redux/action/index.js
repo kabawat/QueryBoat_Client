@@ -60,3 +60,17 @@ export const delete_message = (payload) => {
         payload,
     }
 }
+export const delete_Current_Message = (payload) => {
+    return {
+        type: 'DELETE_CURRENT_MESSAGE',
+        payload,
+    }
+}
+
+// clean chat message 
+export const clean_message = (payload) => {
+    return {
+        type: 'CLEAN_MESSAGE',
+        payload
+    }
+}
