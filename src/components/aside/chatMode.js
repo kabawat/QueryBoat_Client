@@ -129,11 +129,7 @@ const ChatMode = () => {
                         }
                     </NewChatContainer>
                     {/* new user action  */}
-                    <NewChatContainer>
-                        <NewChat>
-                            <BsThreeDots />
-                        </NewChat>
-                    </NewChatContainer>
+                    
                 </UserAction>
             </ChatModeHeader>
 

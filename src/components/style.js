@@ -20,7 +20,7 @@ export const BackArrow = styled(Button)`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     font-size: 24px;
@@ -29,6 +29,9 @@ export const BackArrow = styled(Button)`
     &:active{
         background: rgb(82 119 156 / 52%);
         color: #fff;
+    }
+    @media screen and (max-width:768px){
+        display: flex;
     }
 `
 
@@ -51,37 +54,6 @@ export const UserStatus = styled(Div)`
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 1px;
-`
-export const SettingSection = styled(Div)`
-    position: relative;
-    /* z-index: 20; */
-    `
-export const SettingToggle = styled(Button)`
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgb(73 74 76);
-    border-radius: 50%;
-    transition: all 0.2s linear;
-    font-size: 18px;
-    &:active{
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-    }
-`
-export const ListContaienr = styled(Div)`
-    z-index: 10;
-    position: absolute;
-    right: 0px;
-    width: 260px;
-    height: 400px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    background: #fff;
-    border-radius: 8px;
-    top: ${({ top }) => top};
-    transition:  ${({ delay }) => `${delay}s`} all  ease-in-out;
-    visibility: ${({ show }) => show};
 `
 
 // footer 
