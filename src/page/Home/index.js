@@ -14,7 +14,7 @@ import Loader from '../../components/loader/Loader'
 import { chat_List, fetch_chat, myProfile, store_message } from '../../redux/action'
 import axios from 'axios'
 const Home = () => {
-    const { BaseUrl, curChat, userProfile, socket } = useSelector(state => state)
+    const { BaseUrl, curChat, userProfile, asideMobile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
     const [cookies, , removeCookies] = useCookies()
     const dispatch = useDispatch()
@@ -81,7 +81,7 @@ const Home = () => {
     }, [])
     return (
         isRender ? <Container>
-            <Aside>
+            <Aside isActive={asideMobile}>
                 <ChatAside />
             </Aside>
             <Main>

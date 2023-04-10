@@ -16,6 +16,22 @@ export const UserInfo = styled(Div)`
     align-items: center;
     /* background: red; */
 `
+export const BackArrow = styled(Button)`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(82 119 156);
+    &:active{
+        background: rgb(82 119 156 / 52%);
+        color: #fff;
+    }
+`
+
 export const UserDp = styled(Div)`
     width: 40px;
     height: 40px;
@@ -249,7 +265,13 @@ export const ChatBox = styled(Div)`
     flex-direction: ${({ isMe }) => isMe ? 'row-reverse' : 'row'};
     position: relative;
     
-    `
+`
+export const NoMsgBox = styled(Div)`
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+`
 export const MessageOuter = styled(Div)`
     max-width: 60%;
     position: relative;
@@ -258,6 +280,8 @@ export const MessageOuter = styled(Div)`
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
     ${({ isMe }) => isMe ? 'border-bottom-right-radius' : 'border-bottom-left-radius'} : 2px;
     overflow: hidden;
+    @media screen and (max-width:425px) {
+    }
 
 `
 export const ClipBoard = styled(Div)`
@@ -315,8 +339,10 @@ export const Message = styled(Div)`
 `
 export const ChatDp = styled(Div)`
     margin: 0px 10px;
-    width: 40px;
-    height: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    max-height: 40px;
     background: red;
     overflow: hidden;
     border-radius: 50%;
@@ -344,6 +370,11 @@ export const ContextContainer = styled(Div)`
     border: 1px solid #dddddd9e;
     padding: 5px 6px;
     z-index:100;
+    @media screen and (max-width : 768px) {
+        left: 50%;
+        top : 50%;
+        transform: translate(-50%,-50%)
+    }
     div{
         margin: 3px 0px;
         button{

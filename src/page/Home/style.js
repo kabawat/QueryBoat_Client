@@ -17,6 +17,11 @@ export const Aside = styled(Div)`
     background: #E3F2FD;
     z-index: 15;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+    transition: all 0.1s linear;
+    @media screen and (max-width:768px){
+        width:${({ isActive }) => (isActive ? '100%' : '0px')};
+        overflow: hidden;
+    }
     
 `
 export const Main = styled(Div)`
@@ -28,7 +33,11 @@ export const Main = styled(Div)`
     left: 0px;
     padding-left: 380px;
     z-index: 10;
-    `
+    transition: all 0.1s linear;
+    @media screen and (max-width:768px){
+        padding-left: 0px;
+    }
+`
 
 export const ChatContainer = styled(Div)`
     width: 100%;

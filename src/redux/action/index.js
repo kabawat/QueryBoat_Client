@@ -12,6 +12,14 @@ export const storyMode = (payload) => {
     }
 }
 
+// mobile aside show hide 
+export const isMobileActive = (payload) => {
+    return {
+        type: 'IS_MOBILE_ASIDE',
+        payload
+    }
+}
+
 // chatting 
 // current-Chat
 export const currentChat = (payload) => {

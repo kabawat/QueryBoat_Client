@@ -39,6 +39,10 @@ export const SearchContainer = styled(Div)`
     top: ${({ top }) => `${top}px`};
     padding: 20px 10px;
     z-index: 100;
+    @media screen and (max-width : 768px) {
+            left : auto;
+            right :40px
+    }
 `
 export const NewUserName = styled(Div)`
     font-size: 14px;
@@ -115,6 +119,11 @@ export const SettingContainer = styled(Div)`
     left: 52px;
     top: ${({ mouse }) => `${mouse.y}px`};
     overflow:hidden;
+    @media screen and (max-width:560px){
+        width: auto;
+        height: 450px;
+        right:10px;
+    }
 `
 export const SettingNavigation = styled(Div)`
     width: 30%;
@@ -129,6 +138,10 @@ export const SettingNavigation = styled(Div)`
     top: 0px;
     left: 0px;
     z-index: 10;
+    @media screen and (max-width:560px){
+        width: 50px;
+        overflow: hidden;
+    }
 `
 export const SettionSection = styled(Div)`
     padding: 4px 4px;
@@ -172,6 +185,9 @@ export const Icon = styled(Div)`
 export const Item = styled(Div)`
     font-size:13px;
     padding-left:10px;
+    @media screen and (max-width:560px){
+        padding-left:20px;
+    }
 `
 export const SettionMenu = styled(Div)`
     width: 100%;
@@ -181,6 +197,9 @@ export const SettionMenu = styled(Div)`
     left: 0px;
     padding-left: 30%;
     z-index: 8;
+    @media screen and (max-width:560px){
+        padding-left:50px;
+    }
 `
 export const InnerSettingMenu = styled(Div)`
     width: 100%;

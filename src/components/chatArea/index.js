@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard } from '../style'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox } from '../style'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { MdContentCopy, MdOutlineAddReaction } from 'react-icons/md'
@@ -148,7 +148,9 @@ const ChatArea = () => {
                             </ClipBoard>
                         </ChatBox>
                     )
-                }) : 'start chat'
+                }) : <NoMsgBox>
+                    No Message
+                </NoMsgBox>
             }
             {/* ------------------ */}
             <div ref={scroll} id="scroll"></div>

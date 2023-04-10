@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-import { chat_List, clean_message, currentChat, delete_message, fetch_chat } from '../../redux/action'
+import { chat_List, clean_message, currentChat, delete_message, fetch_chat, isMobileActive } from '../../redux/action'
 const ChatMode = () => {
     const { chatList, curChat, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -49,6 +49,7 @@ const ChatMode = () => {
                 receiver,
                 image: `${BaseUrl}${image}`
             }))
+            dispatch(isMobileActive(false))
         }).catch(error => {
             console.log(error?.response?.data)
         })
