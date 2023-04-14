@@ -35,18 +35,18 @@ const ChatMode = () => {
 
     const getFriendProfile = (payload) => {
         //  for fetch curChat and fix Socket.connection issue 
-        localStorage.setItem('curUser', payload?.receiver)
+        localStorage.setItem('curUser', payload?.contact)
 
-        dispatch(fetch_chat(payload?.receiver))
-        axios.get(`${BaseUrl}/receiver/${payload?.receiver}`, {
+        dispatch(fetch_chat(payload?.contact))
+        axios.get(`${BaseUrl}/receiver/${payload?.contact}`, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {
             const { email, chatID } = response?.data?.data
-            const { receiver, image } = payload
+            const { contact, image } = payload
             dispatch(currentChat({
                 email,
                 chatID,
-                receiver,
+                contact,
                 image: `${BaseUrl}${image}`
             }))
             dispatch(isMobileActive(false))
@@ -78,25 +78,25 @@ const ChatMode = () => {
 
     // handal delete chat
     const handleDelete = () => {
-        const { receiver } = curContext
-        const sender = cookies?.auth?.username
+        const { contact } = curContext
+        const { username, token } = cookies?.auth
 
-        axios.post(`${BaseUrl}/remove_chat`, { receiver, sender }, {
-            headers: { token: cookies?.auth?.token }
+        axios.post(`${BaseUrl}/remove_chat`, { contact, username }, {
+            headers: { token: token }
         }).then((result) => {
-            axios.get(`${BaseUrl}/chatList/${sender}`, {
-                headers: { token: cookies?.auth?.token }
+            axios.get(`${BaseUrl}/chatList/${username}`, {
+                headers: { token: token }
             }).then((res) => {
                 dispatch(chat_List(res?.data?.data))
-                if (curChat?.receiver === receiver) {
+                if (curChat?.contact === contact) {
                     dispatch(currentChat({
                         email: '',
                         chatID: '',
-                        receiver: '',
+                        contact: '',
                         image: ``
                     }))
                 }
-                dispatch(delete_message(receiver))
+                dispatch(delete_message(contact))
             }).catch((error) => {
                 console.log(error?.response)
             })
@@ -107,9 +107,8 @@ const ChatMode = () => {
 
     // handal clean chat 
     const handleClean = () => {
-        const { receiver } = curContext
-        console.log(receiver)
-        dispatch(clean_message(receiver))
+        const { contact } = curContext
+        dispatch(clean_message(contact))
     }
 
     return (
@@ -125,11 +124,11 @@ const ChatMode = () => {
                             <Label id='new_user'></Label>
                         </NewChat>
                         {
-                            isNewChatModal ? <NewChatModal state={{ mouse }} /> : null
+                            isNewChatModal ? <NewChatModal state={{ mouse }} setIsNewChatModal={setIsNewChatModal} /> : null
                         }
                     </NewChatContainer>
                     {/* new user action  */}
-                    
+
                 </UserAction>
             </ChatModeHeader>
 
@@ -150,7 +149,7 @@ const ChatMode = () => {
                     </ContaxtMenu>
                     {
                         chatList?.map((curUser, keys) => {
-                            return <UserCartContainer key={keys} UserCartContainer active={curChat?.receiver === curUser?.receiver ? true : false} onContextMenu={(event) => {
+                            return <UserCartContainer key={keys} UserCartContainer active={curChat?.contact === curUser?.contact ? true : false} onContextMenu={(event) => {
                                 handalContextMenu(event)
                                 setCurContext(curUser)
                             }} id='' title=''>
@@ -159,7 +158,7 @@ const ChatMode = () => {
                                 </UserChatDp>
                                 <ChatLinkContainer>
                                     <UserInfo onClick={() => getFriendProfile(curUser)}>
-                                        <UserName>{curUser?.receiver}</UserName>
+                                        <UserName>{curUser?.contact}</UserName>
                                         <ChatPreview>
                                             last seen 10:12 PM
                                         </ChatPreview>

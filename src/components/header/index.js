@@ -22,7 +22,7 @@ const HeaderBody = () => {
                 <UserDetails>
                     <UserName>
                         {
-                            curChat?.receiver
+                            curChat?.contact
                         }
                     </UserName>
                     <UserStatus>

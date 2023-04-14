@@ -24,12 +24,13 @@ const FooterBody = () => {
                 message: typeMsg,
                 time: new Date(),
                 sender: {
-                    username: curChat?.receiver,
-                    chatID: curChat?.chatID,
-                },
-                receiver: {
                     image: userProfile?.profile_image,
                     username: userProfile?.username,
+                    chatID: socket.id
+                },
+                receiver: {
+                    username: curChat?.contact,
+                    chatID: curChat?.chatID,
                 },
             }
             socket.emit('Send Message', data)
@@ -38,8 +39,8 @@ const FooterBody = () => {
                 time: new Date(),
                 isMe: true
             }
-            dispatch(store_message(curChat?.receiver, chat))
-            dispatch(fetch_chat(curChat?.receiver))
+            dispatch(store_message(curChat?.contact, chat))
+            dispatch(fetch_chat(curChat?.contact))
         }
     }
 

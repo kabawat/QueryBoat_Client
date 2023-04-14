@@ -24,7 +24,7 @@ export const contactlist = (state = [], action) => {
 }
 
 // chat list 
-export const chatList = (state = [], action) => {
+export const chatList = (state = null, action) => {
     if (action.type === 'CHAT_LIST') {
         return action.payload
     }
@@ -34,7 +34,7 @@ export const chatList = (state = [], action) => {
 // current chat 
 const data = {
     email: '',
-    receiver: '',
+    contact: '',
     image: '',
     chatID: ''
 }

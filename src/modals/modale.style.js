@@ -68,6 +68,19 @@ export const ContactList = styled(Div)`
         border-radius: 10px;
     }
 `
+export const ContactListLoader = styled(Div)`
+    width: 100%; 
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: rgb(227 242 253 / 16%);
+    border-radius: 10px;
+    backdrop-filter: blur(1px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
 export const ContactItem = styled(Button)`
     width: 100%;
     height: 45px;
