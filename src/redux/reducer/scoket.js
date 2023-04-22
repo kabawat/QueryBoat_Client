@@ -14,7 +14,6 @@ const socket = (state = socketInit, action) => {
 }
 export default socket
 
-
 // contact list 
 export const contactlist = (state = [], action) => {
     if (action.type === 'CONTACT_LIST') {

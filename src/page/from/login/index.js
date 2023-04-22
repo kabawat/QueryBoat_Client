@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useCookies } from 'react-cookie'
 import Loader from '../../../components/loader/Loader'
 import { chat_List, myProfile } from '../../../redux/action'
+import { ThreeDots } from 'react-loader-spinner'
 const Login = () => {
     const { BaseUrl, socket } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -16,6 +17,7 @@ const Login = () => {
     const [isRender, setIsRender] = useState(false)
     const [cookies, setCookies] = useCookies()
     const navigate = useNavigate()
+    const [isLoader, setIsLoader] = useState(false)
     useEffect(() => {
         if (!cookies?.auth) {
             setIsRender(true)
@@ -89,8 +91,10 @@ const Login = () => {
 
     // login function 
     const handalSubmit = event => {
+        setIsLoader(true)
         event.preventDefault()
         const isValid = EmailValidation(formData)
+
         if (isValid) {
             axios.post(`${BaseUrl}/login`, formData).then((Response) => {
                 const { username, token } = Response?.data
@@ -99,15 +103,21 @@ const Login = () => {
                 }).then((result) => {
                     dispatch(myProfile(result?.data?.data))
                     getAllChat(token, username)
+                    setIsLoader(false)
                 }).catch((error) => {
                     console.log(error)
+                    setIsLoader(false)
                 })
             }).catch((error) => {
+                setIsLoader(false)
                 setError({
                     password: error?.response?.data?.message
                 })
             })
+        } else {
+            setIsLoader(false)
         }
+
     }
     return (
         isRender ? <section className="container forms">
@@ -144,11 +154,26 @@ const Login = () => {
                             <label htmlFor="pwd" >{pwdShow ? 'hide' : 'show'}  password</label>
                         </div>
                         <div className="form-link">
-                            <NavLink href="#" className="forgot-pass">Forgot password?</NavLink>
+                            <NavLink to="/forgot-password" className="forgot-pass">Forgot password?</NavLink>
                         </div>
 
                         <div className="field button-field">
-                            <button className='form-btn' type='submit'>Login</button>
+                            {
+                                isLoader ?
+                                    <div className="field button-field">
+                                        <button className='form-loader form-btn' type='button'>
+                                            <ThreeDots
+                                                height="60"
+                                                width="60"
+                                                radius="9"
+                                                color="#fff"
+                                                ariaLabel="three-dots-loading"
+                                                visible={true}
+                                            />
+                                        </button>
+                                    </div> : <button className='form-btn' type='submit'>Login</button>
+                            }
+
                         </div>
                     </form>
 

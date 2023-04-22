@@ -4,6 +4,7 @@ import Login from './page/from/login'
 import Signup from './page/from/signup'
 import Home from './page/Home'
 import { Container } from './w3chat.style'
+import ForgetPwd from './page/from/forget-password'
 
 const QueryBoat = () => {
     return (
@@ -14,6 +15,7 @@ const QueryBoat = () => {
                     <Route path='*' element={<Home />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/signup' element={<Signup />} />
+                    <Route path='/forgot-password' element={<ForgetPwd />} />
                 </Routes>
             </BrowserRouter>
         </Container>

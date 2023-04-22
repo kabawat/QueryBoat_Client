@@ -13,7 +13,7 @@ const rootReducer = combineReducers(
         contactlist,
         chatList,
         curChat,
-        chatMessage
+        chatMessage,
     }
 );
 export default rootReducer;
