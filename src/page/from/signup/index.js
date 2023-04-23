@@ -209,7 +209,11 @@ const Signup = () => {
 
     // handal submit 
     const register = (finalData) => {
-        axios.post(`${BaseUrl}/update_profile_picture`, finalData).then((response) => {
+        axios.post(`${BaseUrl}/update_profile_picture`, finalData, {
+            headers: {
+                token: loginData?.token
+            }
+        }).then((response) => {
             const { username, token } = loginData
             setCookies('auth', {
                 username, token

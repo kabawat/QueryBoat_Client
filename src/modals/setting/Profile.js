@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { Image } from '../../style'
 import { UserDpSection, DpContainer, DpImage, DpMenu, DpSetting, ActionList, UserInfoSection, InfoGroup, TitleBox, EditBox, EditButton } from './style'
-import Dp from '../../assets/user1.png'
 import { MdOutlineModeEdit } from 'react-icons/md'
 import { IoSaveOutline } from 'react-icons/io5'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
+import { useCookies } from 'react-cookie'
+import { myProfile } from '../../redux/action'
 const Profile = () => {
+    const [cookies] = useCookies()
     const [isDpSetting, setIsDpSetting] = useState(false)
+    const dispatch = useDispatch()
     const HowDpSetting = (event) => {
         setIsDpSetting(!isDpSetting)
     }
@@ -21,6 +25,48 @@ const Profile = () => {
             ...data,
             [name]: value
         })
+    }
+
+
+    function updateImage(finalData) {
+        axios.post(`${BaseUrl}/update_profile_picture`, finalData, {
+            headers: { token: cookies?.auth?.token }
+        }).then((response) => {
+            axios.get(`${BaseUrl}/profile/${data?.username}`, {
+                headers: { token: cookies?.auth?.token }
+            }).then((result) => {
+                dispatch(myProfile(result?.data?.data))
+                setData(result?.data?.data)
+                setIsDpSetting(false)
+            }).catch((error) => {
+                console.log(error)
+            })
+            setIsDpSetting(false)
+        })
+    }
+
+    const finalData = new FormData();
+    // change profile image 
+    const changeProfileDp = (event) => {
+        finalData.append("profile", event.target.files[0]);
+        finalData.append("email", data.email);
+        finalData.append("oldImage", data?.profile_image);
+        updateImage(finalData)
+    }
+
+    // set profile Image 
+    const UpdateProfileDp = (event) => {
+        finalData.append("profile", event.target.files[0]);
+        finalData.append("email", data.email);
+        updateImage(finalData)
+    }
+
+    // remove profile Image 
+    const removeProfileImage = () => {
+        finalData.append("email", data.email);
+        finalData.append("image", true);
+        finalData.append("oldImage", data?.profile_image);
+        updateImage(finalData)
     }
     return (
         <>
@@ -37,9 +83,26 @@ const Profile = () => {
                     {
                         isDpSetting &&
                         <DpSetting>
-                            <ActionList onClick={() => setIsDpSetting(false)}>View</ActionList>
-                            <ActionList onClick={() => setIsDpSetting(false)}>Change</ActionList>
-                            <ActionList onClick={() => setIsDpSetting(false)}>Remove</ActionList>
+                            <input id='changeImage' type='file' onChange={changeProfileDp} />
+                            <input id='updateImage' type='file' onChange={UpdateProfileDp} />
+                            {
+                                data?.profile_image !== '/user/profile.png' ? <>
+                                    <ActionList onClick={() => setIsDpSetting(false)}>
+                                        <label htmlFor='#'>View</label>
+                                    </ActionList>
+                                    <ActionList>
+                                        <label htmlFor='changeImage'>Change</label>
+                                    </ActionList>
+                                    <ActionList onClick={removeProfileImage}>
+                                        <label htmlFor='#'>Remove</label>
+                                    </ActionList>
+                                </> : <>
+                                    <ActionList>
+                                        <label htmlFor='updateImage'>Update</label>
+                                    </ActionList>
+                                </>
+                            }
+
                         </DpSetting>
                     }
                 </DpContainer>

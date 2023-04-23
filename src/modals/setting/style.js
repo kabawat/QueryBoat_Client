@@ -54,19 +54,30 @@ export const DpSetting = styled(Div)`
     background: #fff;
     padding: 5px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    input{
+        display: none;
+    }
 `
 
 export const ActionList = styled(Button)`
     font-size: 14px;
-    padding: 5px 10px;
     border-radius: 4px;
     background: #fff;
     white-space: nowrap;
     width: 100%;
     text-align: left;
+    label{
+        cursor: pointer;
+        padding: 5px 10px;
+        display: block;
+    }
+    input {
+        display: none;
+    }
     &:hover{
         background: #dddddd9e;
     }
+    
 `
 export const UserInfoSection = styled(Div)`
     width: 100%;
