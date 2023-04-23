@@ -7,6 +7,7 @@ import { BiImages } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie'
 import { fetch_chat, store_message } from '../../redux/action';
+import Ring from './ring01.mp3'
 const FooterBody = () => {
     const { socket, curChat, userProfile } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -33,6 +34,7 @@ const FooterBody = () => {
                     chatID: curChat?.chatID,
                 },
             }
+            new Audio(Ring).play()
             socket.emit('Send Message', data)
             const chat = {
                 message: typeMsg,

@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
 import { chat_List, fetch_chat, myProfile, store_message } from '../../redux/action'
 import axios from 'axios'
+import ring from './ring02.mp3'
 const Home = () => {
     const { BaseUrl, curChat, chatList, userProfile, asideMobile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
@@ -57,6 +58,8 @@ const Home = () => {
 
         // Handle 'Received Message' event
         const handleReceivedMessage = (chat) => {
+            var audio = new Audio(ring);
+            audio.play();
             if (chatList !== null) {
                 const isExist = chatList.some(person => person.contact === chat?.contact)
                 if (isExist === false) {
