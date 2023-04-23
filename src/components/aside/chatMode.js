@@ -1,16 +1,13 @@
 import React from 'react'
-import dp from '../../assets/user1.png'
 import NewChatModal from '../../modals/NewUserModale'
 import { ChatModeHeader, ChatTitle, UserAction, NewChatContainer, NewChat, ChatMainContainer, ChatContainer, ChatMainCotainer, UserCartContainer, ChatLinkContainer, UserChatDp, UserName, UserInfo, ChatPreview, ContaxtMenu, Label } from './style'
 import { BiEdit } from 'react-icons/bi'
-import { BsThreeDots } from 'react-icons/bs';
 import { Button, ContextAction, Image } from '../../style'
 import { useState } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { AiOutlineClear, AiOutlineConsoleSql } from 'react-icons/ai'
+import { AiOutlineClear } from 'react-icons/ai'
 import { BsPin } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
 import { chat_List, clean_message, currentChat, delete_message, fetch_chat, isMobileActive } from '../../redux/action'
@@ -34,17 +31,16 @@ const ChatMode = () => {
     })
 
     const getFriendProfile = (payload) => {
-        //  for fetch curChat and fix Socket.connection issue 
-        localStorage.setItem('curUser', payload?.contact)
+        //  for fetch curChat and fix Socket.connection issue when contact's refresh the page
+        const { contact } = payload
+        localStorage.setItem('curUser', contact)
+        dispatch(fetch_chat(contact))
 
-        dispatch(fetch_chat(payload?.contact))
-        axios.get(`${BaseUrl}/receiver/${payload?.contact}`, {
+        axios.get(`${BaseUrl}/receiver/${contact}`, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {
-            const { email, chatID } = response?.data?.data
-            const { contact, image } = payload
+            const { image, chatID } = response?.data?.data
             dispatch(currentChat({
-                email,
                 chatID,
                 contact,
                 image: `${BaseUrl}${image}`

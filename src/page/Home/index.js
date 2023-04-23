@@ -11,11 +11,11 @@ import FooterBody from '../../components/footer'
 import { Aside, ChatContainer, Container, Header, Main, Footer, ChatAreaContainer } from './style'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
-import { chat_List, fetch_chat, myProfile, store_message } from '../../redux/action'
+import { chat_List, myProfile, store_message } from '../../redux/action'
 import axios from 'axios'
 import ring from './ring02.mp3'
 const Home = () => {
-    const { BaseUrl, curChat, chatList, userProfile, asideMobile, socket } = useSelector(state => state)
+    const { BaseUrl, curChat, chatList, asideMobile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
     const [cookies, , removeCookies] = useCookies()
     const dispatch = useDispatch()
@@ -64,7 +64,6 @@ const Home = () => {
                 const isExist = chatList.some(person => person.contact === chat?.contact)
                 if (isExist === false) {
                     const chatSchema = {
-                        image: chat?.image,
                         username: cookies?.auth?.username,
                         contact: chat?.contact
                     }

@@ -34,7 +34,6 @@ const FooterBody = () => {
                     chatID: curChat?.chatID,
                 },
             }
-            new Audio(Ring).play()
             socket.emit('Send Message', data)
             const chat = {
                 message: typeMsg,
@@ -43,6 +42,7 @@ const FooterBody = () => {
             }
             dispatch(store_message(curChat?.contact, chat))
             dispatch(fetch_chat(curChat?.contact))
+            new Audio(Ring).play()
         }
     }
 

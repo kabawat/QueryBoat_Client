@@ -1,4 +1,3 @@
-import dp from '../assets/user2.jpg'
 import React, { useState } from 'react'
 import { Image } from '../style.js'
 import { SubTitle, AddUser, SearchContainer, NewUserName, AddUserHeading, ContactList, ContactItem, NewUserDp, TagLine, NewUserModale, ContactListLoader, } from './modale.style.js'
@@ -20,7 +19,6 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
     }
     const userHandal = async (payload) => {
         const chat = {
-            image: payload?.profile_image,
             username: cookies?.auth?.username,
             contact: payload?.username
         }
@@ -43,7 +41,7 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
         })
     }
     useEffect(() => {
-        axios.get(`${BaseUrl}/contact_list`, {
+        axios.post(`${BaseUrl}/contact_list/`, { email: userProfile?.email }, {
             headers: { token: cookies?.auth?.token }
         }).then(res => {
             dispatch(all_contact(res?.data?.data))
