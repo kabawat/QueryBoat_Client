@@ -45,7 +45,7 @@ const SettingAside = () => {
             setIsProfile(false)
         }
     })
-    
+
     return (
         <SettingAsideContainer>
             <AsideTab>
@@ -65,7 +65,7 @@ const SettingAside = () => {
                 <DpSection>
                     <UserActionBox onClick={hadalProfile}>
                         {/* <Image src={userProfiileDp} /> */}
-                        <Image src={`${BaseUrl}${userProfile?.profile_image}`} />
+                        <Image src={userProfile?.profile_image.startsWith('https://') ? userProfile?.profile_image : `${BaseUrl}${userProfile?.profile_image}`} />
                     </UserActionBox>
                 </DpSection>
             </UserSetting>

@@ -73,7 +73,7 @@ const Profile = () => {
             <UserDpSection>
                 <DpContainer>
                     <DpImage>
-                        <Image src={`${BaseUrl}${data?.profile_image}`} />
+                        <Image src={data?.profile_image.startsWith('https://') ? data?.profile_image : `${BaseUrl}${data?.profile_image}`} />
                     </DpImage>
                     <DpMenu onClick={HowDpSetting} active={isDpSetting}>
                         <span>

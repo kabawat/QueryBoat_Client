@@ -62,9 +62,9 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
                         contactlist?.map((curChat, keys) => {
                             return <ContactItem key={keys} onClick={() => userHandal(curChat)}>
                                 <NewUserDp>
-                                    <Image src={`${BaseUrl}${curChat?.profile_image}`} />
+                                    <Image src={curChat?.profile_image.startsWith('https://') ? curChat?.profile_image : `${BaseUrl}${curChat?.profile_image}`} />
                                 </NewUserDp>
-                                <div>
+                                <div>   
                                     <NewUserName>
                                         {curChat?.username}
                                     </NewUserName>

@@ -43,7 +43,7 @@ const ChatMode = () => {
             dispatch(currentChat({
                 chatID,
                 contact,
-                image: `${BaseUrl}${image}`
+                image: image.startsWith('https://') ? image : `${BaseUrl}${image}`
             }))
             dispatch(isMobileActive(false))
         }).catch(error => {
@@ -150,7 +150,7 @@ const ChatMode = () => {
                                 setCurContext(curUser)
                             }} id='' title=''>
                                 <UserChatDp>
-                                    <Image src={`${BaseUrl}${curUser?.image}`} />
+                                    <Image src={curUser?.image.startsWith('https://') ? curUser?.image : `${BaseUrl}${curUser?.image}`} />
                                 </UserChatDp>
                                 <ChatLinkContainer>
                                     <UserInfo onClick={() => getFriendProfile(curUser)}>

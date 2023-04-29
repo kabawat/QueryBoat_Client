@@ -25,6 +25,9 @@ export const NewUserModale = styled(Div)`
     top: 0px;
     left: 0px;
     z-index: 40;
+    @media screen and (max-width : 425px) {
+        backdrop-filter: blur(1px);
+    }
 `
 export const SearchContainer = styled(Div)`
     position: absolute;
@@ -39,9 +42,16 @@ export const SearchContainer = styled(Div)`
     top: ${({ top }) => `${top}px`};
     padding: 20px 10px;
     z-index: 100;
+    z-index:1000;
     @media screen and (max-width : 768px) {
             left : auto;
             right :40px
+    }
+    @media screen and (max-width : 425px) {
+            left : 50%;
+            right :auto;
+            top: 50px;
+            transform:translate(-50%, -0%)
     }
 `
 export const NewUserName = styled(Div)`
@@ -121,6 +131,10 @@ export const SettingModalContainer = styled(Div)`
     position: fixed;
     top: 0px;
     left: 0px;
+    bottom: 0px;
+     @media screen and (max-width : 425px) {
+        backdrop-filter: blur(1px);
+    }
     `
 export const SettingContainer = styled(Div)`
     width: 500px;
@@ -129,8 +143,9 @@ export const SettingContainer = styled(Div)`
     border-radius:8px;
     border: 1px solid #dddddd9e;
     position: absolute;
-    left: 52px;
-    top: ${({ mouse }) => `${mouse.y}px`};
+    left: 10px;
+    /* top: ${({ mouse }) => `${mouse.y}px`}; */
+    top:98%;
     overflow:hidden;
     @media screen and (max-width:560px){
         width: auto;

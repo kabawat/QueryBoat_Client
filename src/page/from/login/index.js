@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie'
 import Loader from '../../../components/loader/Loader'
 import { chat_List, myProfile } from '../../../redux/action'
 import { ThreeDots } from 'react-loader-spinner'
+import GoogleBtn from '../GoogleBtn'
 const Login = () => {
     const { BaseUrl, socket } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -117,7 +118,6 @@ const Login = () => {
         } else {
             setIsLoader(false)
         }
-
     }
     return (
         isRender ? <section className="container forms">
@@ -183,18 +183,15 @@ const Login = () => {
                 </div>
                 <div className="line"></div>
 
-                <div className="media-options">
+                {/* <div className="media-options">
                     <button className="field facebook">
                         <span className="google-img"><BsFacebook /></span>
                         <span>Login with Facebook</span>
                     </button>
-                </div>
+                </div> */}
 
                 <div className="media-options">
-                    <button className="field google">
-                        <img src="/assets/google.png" alt="" className="google-img" />
-                        <span>Login with Google</span>
-                    </button>
+                    <GoogleBtn />
                 </div>
 
             </div>

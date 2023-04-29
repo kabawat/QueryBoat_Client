@@ -184,6 +184,10 @@
     justify-content: center;
 }
 
+.media-options svg {
+    margin-top: 5px;
+}
+
 button.facebook {
     color: #fff;
     background-color: #4267b2;

@@ -10,6 +10,8 @@ import { useCookies } from 'react-cookie'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { myProfile } from '../../../redux/action'
+import GoogleLogin from 'react-google-login'
+import GoogleBtn from '../GoogleBtn'
 const Signup = () => {
     const navigate = useNavigate()
     const { BaseUrl, socket } = useSelector(state => state)
@@ -393,18 +395,15 @@ const Signup = () => {
 
                     <div className="line"></div>
 
-                    <div className="media-options">
+                    {/* <div className="media-options">
                         <button className="field facebook" type="button">
                             <span className="google-img"><BsFacebook /></span>
                             <span>Login with Facebook</span>
                         </button>
-                    </div>
+                    </div> */}
 
                     <div className="media-options">
-                        <button className="field google" type="button">
-                            <img src="/assets/google.png" alt="" className="google-img" />
-                            <span>Login with Google</span>
-                        </button>
+                        <GoogleBtn />
                     </div>
 
                 </div >
