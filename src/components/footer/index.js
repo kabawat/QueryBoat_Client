@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title } from '../style'
+import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title } from '../style'
 import { BsPlusLg, BsFileEarmarkPdf } from 'react-icons/bs';
 import { IoSendSharp, IoVideocamOutline } from 'react-icons/io5';
 import { IoIosMusicalNotes } from 'react-icons/io';
@@ -17,6 +17,11 @@ const FooterBody = () => {
     const typingHandal = (event) => {
         setTypeMsg(event.target.value)
     }
+
+    const handalImageSend = (event) => { 
+        console.log(event.target.files[0])
+    }
+
     const sendHandal = (event) => {
         event.preventDefault()
         setTypeMsg('')
@@ -46,6 +51,7 @@ const FooterBody = () => {
         }
     }
 
+
     return (
         <FooterContaienr onSubmit={sendHandal}>
             {/* left  */}
@@ -55,31 +61,35 @@ const FooterBody = () => {
                 </SelectButton>
                 <SelectFileBox show={showFile ? 'visible' : 'hidden'}>
                     <FileList show={showFile}>
-                        <input type="file" id='pdf' name='pdf' />
-                        <FileIcon htmlFor='pdf'>
+                        <input type="file" id='pdf' name='pdf' accept='application/pdf' />
+                        <FileIcon>
                             <BsFileEarmarkPdf />
-                            <Title>PDF</Title>
+                            <Label htmlFor='pdf'></Label>
+                            <Title htmlFor='pdf'>PDF</Title>
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='picture' name="picture" />
-                        <FileIcon htmlFor='picture'>
+                        <input type="file" id='picture' name="picture" accept='image/*' onChange={handalImageSend} />
+                        <FileIcon>
                             <BiImages />
-                            <Title>Image</Title>
+                            <Label htmlFor='picture'></Label>
+                            <Title htmlFor='picture'>Image</Title>
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='video' name="video" />
-                        <FileIcon htmlFor='video'>
+                        <input type="file" id='video' name="video" accept='video/*' />
+                        <FileIcon>
                             <IoVideocamOutline />
-                            <Title>Video</Title>
+                            <Label htmlFor='video'></Label>
+                            <Title htmlFor='video'>Video</Title>
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='music' name="music" />
-                        <FileIcon htmlFor='music'>
+                        <input type="file" id='music' name="music" accept=".mp3" />
+                        <FileIcon>
                             <IoIosMusicalNotes />
-                            <Title>Music</Title>
+                            <Label htmlFor='music'></Label>
+                            <Title htmlFor='music'>Music</Title>
                         </FileIcon>
                     </FileList>
                 </SelectFileBox>

@@ -124,7 +124,7 @@ export const FileList = styled(Button)`
     }
 `
 
-export const FileIcon = styled.label`
+export const FileIcon = styled.div`
     cursor: pointer;
     display: block;
     position: relative;
@@ -132,15 +132,17 @@ export const FileIcon = styled.label`
     height: 40px;
     border-radius: 50%;
     background: #fff;
-    display: grid;
-    place-items: center;
+    display: flex;
+    place-items:center;
+    justify-content: center;
     color: #457678;
     font-size:20px;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     margin-right: 10px;
+
     &:hover{
         color: #1976d2;
-        span{
+        label:nth-child(1){
             color: #1976d2;
             opacity: 1;
             visibility: visible;
@@ -148,9 +150,25 @@ export const FileIcon = styled.label`
         }
     }
     `
-export const Title = styled.span`
+export const Label = styled.label`
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    cursor: pointer;
+    &:hover ~ label{
+        color: #1976d2;
+            opacity: 1;
+            visibility: visible;
+            transform: translate(20%, -50%);
+    }
+`
+export const Title = styled.label`
     visibility: hidden;
     position: absolute;
+    cursor: pointer;
     font-size: 12px;
     opacity: 0;
     padding: 4px 10px;
