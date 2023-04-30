@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime } from '../style'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime, ChatImage } from '../style'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { MdContentCopy, MdOutlineAddReaction } from 'react-icons/md'
 import { AiOutlineStar } from 'react-icons/ai'
-import { HiReply } from 'react-icons/hi'
+import { HiReply, HiOutlineCloudDownload } from 'react-icons/hi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { TbArrowForwardUp } from 'react-icons/tb'
 import { delete_Current_Message } from '../../redux/action'
 import { useRef } from 'react'
-import VideoPlayer from './VideoPlayer'
 
 const ChatArea = () => {
     const { chatMessage, userProfile, BaseUrl, curChat } = useSelector(state => state)
@@ -22,6 +21,8 @@ const ChatArea = () => {
         keys: ''
     })
     const [isReact, setIsReact] = useState(false)
+    const [reaction, setReaction] = useState(false)
+
     const Dispatch = useDispatch()
     const [mouse, setMouse] = useState({
         x: 0,
@@ -68,11 +69,29 @@ const ChatArea = () => {
     // copy clipboard 
     const copyMessage = async () => {
         await navigator.clipboard.writeText(curMessage?.message)
+        setReaction('copied')
         setIsReact(true)
         setTimeout(() => {
             setIsReact(false)
         }, 1200)
     }
+
+    // download file 
+    const downloadFile = () => {
+        const url = curMessage?.file;
+        const link = document.createElement("a");
+        link.setAttribute("target", "_blank");
+        link.href = url;
+        link.setAttribute("download", url.split("/")[5]); // you can set the filename here
+        document.body.appendChild(link);
+        link.click();
+        setReaction('Saved!')
+        setIsReact(true)
+        setTimeout(() => {
+            setIsReact(false)
+        }, 1200)
+    }
+    
     // scroll 
     const scroll = useRef(null)
     useEffect(() => {
@@ -88,12 +107,23 @@ const ChatArea = () => {
                         <span>Reply</span>
                     </Button>
                 </ContextAction>
-                <ContextAction>
-                    <Button onClick={copyMessage}>
-                        <MdContentCopy />
-                        <span>Copy</span>
-                    </Button>
-                </ContextAction>
+                {
+                    curMessage?.message && <ContextAction>
+                        <Button onClick={copyMessage}>
+                            <MdContentCopy />
+                            <span>Copy</span>
+                        </Button>
+                    </ContextAction>
+                }
+                {
+                    curMessage?.file && <ContextAction>
+                        <Button onClick={downloadFile}>
+                            <HiOutlineCloudDownload />
+                            <span>Download</span>
+                        </Button>
+                    </ContextAction>
+                }
+
                 <ContextAction>
                     <Button>
                         <MdOutlineAddReaction />
@@ -167,13 +197,16 @@ const ChatArea = () => {
                                 {
                                     msgType === 'image' && <VideoMsg isMe={false} >
                                         <Msg>
-                                            <div>
-                                                <img src={file} width="100%" height="100%"/>
-                                            </div>
+                                            <ChatImage>
+                                                <img src={file} />
+                                            </ChatImage>
                                             <MsgContant>
-                                                <VideoDesc>
-                                                    {message}
-                                                </VideoDesc>
+                                                {
+                                                    message && <VideoDesc>
+                                                        {message}
+                                                    </VideoDesc>
+                                                }
+
                                                 <VideoTime>
                                                     {date}
                                                 </VideoTime>
@@ -184,7 +217,7 @@ const ChatArea = () => {
                                 {/* <HiddenInput /> */}
                             </MessageOuter>
                             <ClipBoard active={curMessage?.keys === keys && isReact ? true : false}>
-                                copied
+                                {reaction}
                             </ClipBoard>
                         </ChatBox>
                     )

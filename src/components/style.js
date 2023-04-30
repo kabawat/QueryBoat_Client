@@ -64,6 +64,58 @@ export const FooterContaienr = styled.form`
     padding-left: 80px;
     padding-right: 70px;
 `
+export const ImagePreview = styled.div`
+    width: 300px;
+    height: auto;
+    position: absolute;
+    bottom:105%;
+    overflow: hidden;
+    left:20px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    
+    `
+export const SelectedFileAction = styled.div`
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    backdrop-filter: blur(2px);
+    /* background: rgba(0,0,0,0.1); */
+
+    /* background: linear-gradient(0deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2), rgba(255,255,255,0.0)); */
+    `
+export const ActionButton = styled(Button)`
+    font-size: 20px;
+    font-weight: bold;
+    color: aliceblue;
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    display: grid;
+    color: rgb(62 66 72);
+    place-items: center;
+    &:hover{
+        color: rgb(87 157 255);
+    }
+`
+export const SelectedInner = styled.div`
+    width: 100%;
+    border-radius: inherit;
+    position: relative;
+    overflow:hidden;
+    img {
+        border-radius: inherit;
+        width: 100%;
+        height: auto;
+    }
+
+`
+
 export const FileContainer = styled(Div)`
     position: absolute;
     left: 0px;
@@ -343,10 +395,20 @@ export const ChatDp = styled(Div)`
 export const Msg = styled(Div)`
     font-size: 15px;
 `
+export const ChatImage = styled(Div)`
+    border-radius: 6px;
+    img{
+        width: 100%;
+        /* height: 100%; */
+        border-radius: inherit;
+    }
+`
+
 export const Time = styled(Div)`
     font-size: 12px;
     text-align: right;
     color: #999;
+    backdrop-filter:blur(3px);
 `
 
 // Context Container
@@ -441,10 +503,11 @@ export const MsgContant = styled(Div)` //4
 export const VideoTime = styled(Div)` 
     position: absolute;
     bottom: 5px;
-    right: 10px;
+    right: 0px;
     font-size: 12px;
     text-align: right;
     color: #999;
+    padding: 0px 10px;
 `
 export const VideoDesc = styled(Div)`  //3
     width: 100%;

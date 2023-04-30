@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title } from '../style'
+import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title, ImagePreview, SelectedFileAction, SelectedInner, ActionButton, } from '../style'
 import { BsPlusLg, BsFileEarmarkPdf } from 'react-icons/bs';
 import { IoSendSharp, IoVideocamOutline } from 'react-icons/io5';
 import { IoIosMusicalNotes } from 'react-icons/io';
@@ -7,44 +7,44 @@ import { BiImages } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetch_chat, store_message } from '../../redux/action';
 import Ring from './ring01.mp3'
-import axios from 'axios';
+import { BsTrash } from 'react-icons/bs'
 const FooterBody = () => {
-    const { socket, curChat, userProfile, BaseUrl } = useSelector(state => state)
+    const { socket, curChat, userProfile } = useSelector(state => state)
     const dispatch = useDispatch()
     const [showFile, setShowFile] = useState(false)
     const [typeMsg, setTypeMsg] = useState('')
     const typingHandal = event => {
         setTypeMsg(event.target.value)
     }
-
-    const handalImageSend = event => {
-        console.log(event.target.files[0])
-    }
-
     // video handler 
     const [msgType, setMsgType] = useState('text')
-    const [File, setFile] = useState()
+    const [fileLink, setFileLink] = useState()
     const handleFileChange = event => {
         const file = event.target.files[0]
+        const reader = new FileReader();
         setMsgType(file?.type.split('/')[0])
-        setFile(file)
+        if (file.type.startsWith('image/')) {
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                const base64String = reader.result;
+                setFileLink(base64String)
+            };
+        }
+        if (file.type.startsWith('video/')) {
+            reader.readAsBinaryString(file);
+            reader.onload = () => {
+                const videoBase64 = btoa(reader.result);
+                setFileLink(videoBase64)
+            };
+        }
         setShowFile(false)
-    }
-
-    const sendFilehandler = async (payload) => {
-        const fileData = new FormData()
-        fileData.append("send_file", payload)
-
-        const res = await axios.post(`${BaseUrl}/upload_file`, fileData)
-        return await res?.data?.fileUrl
     }
 
     const sendHandal = async (event) => {
         event.preventDefault()
-        const fileLink = File ? await sendFilehandler(File) : ''
         setTypeMsg('')
         setMsgType('text')
-        setFile()
+        setFileLink()
         if (typeMsg || fileLink) {
             const data = {
                 message: typeMsg,
@@ -78,6 +78,18 @@ const FooterBody = () => {
 
     return (
         <FooterContaienr onSubmit={sendHandal}>
+            {fileLink && <ImagePreview>
+                <SelectedInner>
+                    {
+                        <img src={fileLink} />
+                    }
+                    <SelectedFileAction>
+                        <ActionButton type="button" onClick={() => { setFileLink('') }}>
+                            <BsTrash />
+                        </ActionButton>
+                    </SelectedFileAction>
+                </SelectedInner>
+            </ImagePreview>}
             {/* left  */}
             <FileContainer>
                 <SelectButton type='button' x={showFile ? 45 : 0} onClick={() => setShowFile(!showFile)}>
@@ -85,7 +97,7 @@ const FooterBody = () => {
                 </SelectButton>
                 <SelectFileBox show={showFile ? 'visible' : 'hidden'}>
                     <FileList show={showFile}>
-                        <input type="file" id='pdf' name='pdf' accept='application/pdf' />
+                        <input type="file" id='pdf' name='pdf' accept='application/pdf' disabled />
                         <FileIcon>
                             <BsFileEarmarkPdf />
                             <Label htmlFor='pdf'></Label>
@@ -101,7 +113,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='video' name="video" accept='video/*' onChange={handleFileChange} />
+                        <input type="file" id='video' name="video" accept='video/*' disabled />
                         <FileIcon>
                             <IoVideocamOutline />
                             <Label htmlFor='video'></Label>
@@ -109,7 +121,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='music' name="music" accept=".mp3" />
+                        <input type="file" id='music' name="music" accept=".mp3" disabled />
                         <FileIcon>
                             <IoIosMusicalNotes />
                             <Label htmlFor='music'></Label>
