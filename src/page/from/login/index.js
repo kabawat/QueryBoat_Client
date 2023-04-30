@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate, } from 'react-router-dom'
 import "../style.css"
-import { BsFacebook } from 'react-icons/bs'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { useCookies } from 'react-cookie'
@@ -25,7 +24,7 @@ const Login = () => {
         } else {
             navigate('/')
         }
-    }, [])
+    }, [cookies])
 
     function isValidEmail(email) {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

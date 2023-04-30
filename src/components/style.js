@@ -269,6 +269,7 @@ export const MessageOuter = styled(Div)`
     background: #fff;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
     ${({ isMe }) => isMe ? 'border-bottom-right-radius' : 'border-bottom-left-radius'} : 2px;
+    margin-right: ${({ isMe }) => isMe ? '10px' : "0px"};
     overflow: hidden;
     @media screen and (max-width:425px) {
     }
@@ -397,4 +398,56 @@ export const Heading = styled(Div)`
     font-size: 20px;
     font-weight: bold;
     color: #557;
+`
+export const MassageOuter = styled(Div)` //6
+    max-width: 60%;
+    position: relative;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    ${({ isMe }) => isMe ? 'border-bottom-right-radius' : 'border-bottom-left-radius'} : 2px;
+    overflow: hidden;
+
+`
+export const Massage = styled(Div)`
+    padding: 10px 20px;
+    width: 100%;
+    height: 100%;
+`
+export const VideoMsg = styled(Div)` //7
+     padding: 10px 10px;
+     width: 280px;
+     height: 100%;
+    `
+export const Video = styled(Div)` //8
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+    video{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+`
+export const MsgContant = styled(Div)` //4
+    position: relative;
+`
+export const VideoTime = styled(Div)` 
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 12px;
+    text-align: right;
+    color: #999;
+`
+export const VideoDesc = styled(Div)`  //3
+    width: 100%;
+    text-align: justify;
+    padding: 5px 10px;
 `

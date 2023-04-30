@@ -5,29 +5,51 @@ import { IoSendSharp, IoVideocamOutline } from 'react-icons/io5';
 import { IoIosMusicalNotes } from 'react-icons/io';
 import { BiImages } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie'
 import { fetch_chat, store_message } from '../../redux/action';
 import Ring from './ring01.mp3'
+import axios from 'axios';
 const FooterBody = () => {
-    const { socket, curChat, userProfile } = useSelector(state => state)
+    const { socket, curChat, userProfile, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
     const [showFile, setShowFile] = useState(false)
     const [typeMsg, setTypeMsg] = useState('')
-    const [cookies] = useCookies()
-    const typingHandal = (event) => {
+    const typingHandal = event => {
         setTypeMsg(event.target.value)
     }
 
-    const handalImageSend = (event) => { 
+    const handalImageSend = event => {
         console.log(event.target.files[0])
     }
 
-    const sendHandal = (event) => {
+    // video handler 
+    const [msgType, setMsgType] = useState('text')
+    const [File, setFile] = useState()
+    const handleFileChange = event => {
+        const file = event.target.files[0]
+        setMsgType(file?.type.split('/')[0])
+        setFile(file)
+        setShowFile(false)
+    }
+
+    const sendFilehandler = async (payload) => {
+        const fileData = new FormData()
+        fileData.append("send_file", payload)
+
+        const res = await axios.post(`${BaseUrl}/upload_file`, fileData)
+        return await res?.data?.fileUrl
+    }
+
+    const sendHandal = async (event) => {
         event.preventDefault()
+        const fileLink = File ? await sendFilehandler(File) : ''
         setTypeMsg('')
-        if (typeMsg) {
+        setMsgType('text')
+        setFile()
+        if (typeMsg || fileLink) {
             const data = {
                 message: typeMsg,
+                file: fileLink,
+                msgType: msgType,
                 time: new Date(),
                 sender: {
                     image: userProfile?.profile_image,
@@ -42,8 +64,10 @@ const FooterBody = () => {
             socket.emit('Send Message', data)
             const chat = {
                 message: typeMsg,
+                msgType: msgType,
+                file: fileLink,
                 time: new Date(),
-                isMe: true
+                isMe: true,
             }
             dispatch(store_message(curChat?.contact, chat))
             dispatch(fetch_chat(curChat?.contact))
@@ -69,7 +93,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='picture' name="picture" accept='image/*' onChange={handalImageSend} />
+                        <input type="file" id='picture' name="picture" accept='image/*' onChange={handleFileChange} />
                         <FileIcon>
                             <BiImages />
                             <Label htmlFor='picture'></Label>
@@ -77,7 +101,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList show={showFile}>
-                        <input type="file" id='video' name="video" accept='video/*' />
+                        <input type="file" id='video' name="video" accept='video/*' onChange={handleFileChange} />
                         <FileIcon>
                             <IoVideocamOutline />
                             <Label htmlFor='video'></Label>

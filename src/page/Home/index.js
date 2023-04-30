@@ -48,7 +48,7 @@ const Home = () => {
         } else {
             navigate('/login')
         }
-    }, [])
+    }, [BaseUrl, cookies])
 
     useEffect(() => {
         // Only emit 'refresh' event if cookies.auth is present
@@ -84,6 +84,8 @@ const Home = () => {
                 dispatch(store_message(chat?.contact, {
                     message: chat?.message,
                     time: chat?.time,
+                    msgType: chat?.msgType,
+                    file: chat?.file,
                     isMe: false
                 }));
             } else {

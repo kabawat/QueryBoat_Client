@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { storyMode } from '../../redux/action'
 import { Image } from '../../style';
-import userProfiileDp from '../../assets/user2.jpg'
 import ProfileModal from '../../modals/userProfileModal';
 const SettingAside = () => {
     const { userProfile, BaseUrl } = useSelector(state => state)

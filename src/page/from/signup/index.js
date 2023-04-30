@@ -2,22 +2,19 @@ import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import Loader from '../../../components/loader/Loader'
 import "../style.css"
-import { BsArrowLeft, BsFacebook } from 'react-icons/bs'
+import { BsArrowLeft } from 'react-icons/bs'
 import axios from 'axios'
 import { ThreeDots } from 'react-loader-spinner'
 import { BsPlusLg } from 'react-icons/bs'
 import { useCookies } from 'react-cookie'
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { myProfile } from '../../../redux/action'
-import GoogleLogin from 'react-google-login'
+import { useSelector } from 'react-redux'
 import GoogleBtn from '../GoogleBtn'
 const Signup = () => {
     const navigate = useNavigate()
     const { BaseUrl, socket } = useSelector(state => state)
     const [cookies, setCookies] = useCookies()
     const [isRender, setIsRender] = useState(false)
-    const dispatch = useDispatch()
 
     useEffect(() => {
         if (cookies?.auth) {
@@ -27,7 +24,7 @@ const Signup = () => {
         } else {
             setIsRender(true)
         }
-    }, [])
+    }, [cookies])
 
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)

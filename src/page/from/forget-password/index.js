@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 const ForgetPwd = () => {
     const navigate = useNavigate()
     const { BaseUrl } = useSelector(state => state)
-    const [cookies, setCookies] = useCookies()
+    const [cookies] = useCookies()
     const [isRender, setIsRender] = useState(false)
     useEffect(() => {
         if (cookies?.auth) {
@@ -21,7 +21,7 @@ const ForgetPwd = () => {
         } else {
             setIsRender(true)
         }
-    }, [])
+    }, [cookies])
 
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)

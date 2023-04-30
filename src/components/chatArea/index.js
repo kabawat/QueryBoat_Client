@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox } from '../style'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime } from '../style'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { MdContentCopy, MdOutlineAddReaction } from 'react-icons/md'
@@ -10,6 +10,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { TbArrowForwardUp } from 'react-icons/tb'
 import { delete_Current_Message } from '../../redux/action'
 import { useRef } from 'react'
+import VideoPlayer from './VideoPlayer'
 
 const ChatArea = () => {
     const { chatMessage, userProfile, BaseUrl, curChat } = useSelector(state => state)
@@ -121,27 +122,66 @@ const ChatArea = () => {
             {/* ------------------ */}
             {
                 chatMessage?.length ? chatMessage?.map((curMsg, keys) => {
-                    const { message, isMe, time } = curMsg
+                    const { message, isMe, time, msgType, file } = curMsg
                     const image = isMe ? `${BaseUrl}${userProfile?.profile_image}` : curChat?.image
                     const date = new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
                     return (
                         <ChatBox isMe={isMe} key={keys}>
-                            <ChatDp>
-                                <Image src={image} />
-                            </ChatDp>
+                            {
+                                !isMe && <ChatDp>
+                                    <Image src={image} />
+                                </ChatDp>
+                            }
+
                             <MessageOuter onContextMenu={(event) => {
                                 handaleContextMenu(event)
                                 handleCurrentMessage({ ...curMsg, keys })
                             }} isMe={isMe}>
-                                <Message isMe={isMe} >
+                                {msgType === "text" && <Message isMe={isMe} >
                                     <Msg>
                                         {message}
                                     </Msg>
                                     <Time>
                                         {date}
                                     </Time>
-                                </Message>
-                                <HiddenInput />
+                                </Message>}
+                                {
+                                    msgType === 'video' && <VideoMsg isMe={false} >
+                                        <Msg>
+                                            <Video>
+                                                <video controls>
+                                                    <source src={file} type="video/mp4" />
+                                                </video>
+                                            </Video >
+                                            <MsgContant>
+                                                <VideoDesc>
+                                                    {message}
+                                                </VideoDesc>
+                                                <VideoTime>
+                                                    {date}
+                                                </VideoTime>
+                                            </MsgContant>
+                                        </Msg>
+                                    </VideoMsg>
+                                }
+                                {
+                                    msgType === 'image' && <VideoMsg isMe={false} >
+                                        <Msg>
+                                            <div>
+                                                <img src={file} width="100%" height="100%"/>
+                                            </div>
+                                            <MsgContant>
+                                                <VideoDesc>
+                                                    {message}
+                                                </VideoDesc>
+                                                <VideoTime>
+                                                    {date}
+                                                </VideoTime>
+                                            </MsgContant>
+                                        </Msg>
+                                    </VideoMsg>
+                                }
+                                {/* <HiddenInput /> */}
                             </MessageOuter>
                             <ClipBoard active={curMessage?.keys === keys && isReact ? true : false}>
                                 copied
@@ -152,6 +192,7 @@ const ChatArea = () => {
                     No Message
                 </NoMsgBox>
             }
+            {/* <VideoPlayer /> */}
             {/* ------------------ */}
             <div ref={scroll} id="scroll"></div>
         </MessageContaienr>
