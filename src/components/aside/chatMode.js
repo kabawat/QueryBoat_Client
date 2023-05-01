@@ -30,6 +30,30 @@ const ChatMode = () => {
         }
     })
 
+
+    // lastSeen handler 
+    function getLastSeenFormatted(lastSeen) {
+        const now = new Date();
+        const date = new Date(lastSeen);
+        const daysSinceLastSeen = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+        if (daysSinceLastSeen > 7) {
+            // Format for more than 7 days ago
+            return date.toLocaleString();
+        } else if (daysSinceLastSeen === 0) {
+            // Format for today
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+        } else if (daysSinceLastSeen === 1) {
+            // Format for yesterday
+            return `Yesterday ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+        } else {
+            // Format for less than 7 days ago
+            const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+            const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+            return `${dayOfWeek} ${time}`;
+        }
+    }
+    
     const getFriendProfile = (payload) => {
         //  for fetch curChat and fix Socket.connection issue when contact's refresh the page
         const { contact } = payload
@@ -39,10 +63,12 @@ const ChatMode = () => {
         axios.get(`${BaseUrl}/receiver/${contact}`, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {
-            const { image, chatID } = response?.data?.data
+            const { image, chatID, lastSeen, isOnline } = response?.data?.data
             dispatch(currentChat({
                 chatID,
                 contact,
+                lastSeen: getLastSeenFormatted(lastSeen),
+                isOnline,
                 image: image.startsWith('https://') ? image : `${BaseUrl}${image}`
             }))
             dispatch(isMobileActive(false))
@@ -89,7 +115,9 @@ const ChatMode = () => {
                         email: '',
                         chatID: '',
                         contact: '',
-                        image: ``
+                        image: ``,
+                        lastSeen: '',
+                        isOnline: ''
                     }))
                 }
                 dispatch(delete_message(contact))

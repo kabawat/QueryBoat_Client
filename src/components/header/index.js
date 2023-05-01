@@ -14,7 +14,7 @@ const HeaderBody = () => {
     const HandleTotalAside = () => {
         dispatch(isMobileActive(true))
     }
-    const [showList, setShowList] = useState(true)
+    const [showList, setShowList] = useState(false)
     window.addEventListener('click', event => {
         if (event.target.id !== 'Mobile_Message') {
             setShowList(false)
@@ -25,6 +25,7 @@ const HeaderBody = () => {
         const { contact } = curChat
         dispatch(clean_message(contact))
     }
+
     return (
         <HeaderSection>
             <UserInfo>
@@ -41,7 +42,7 @@ const HeaderBody = () => {
                         }
                     </UserName>
                     <UserStatus>
-                        online
+                        {curChat.isOnline ? 'Online' : `last seen ${curChat.lastSeen}`}
                     </UserStatus>
                 </UserDetails>
             </UserInfo>
