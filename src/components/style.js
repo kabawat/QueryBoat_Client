@@ -16,6 +16,66 @@ export const UserInfo = styled(Div)`
     align-items: center;
     /* background: red; */
 `
+export const SettingSection = styled(Div)`
+    position: relative;
+    /* z-index: 20; */
+    @media screen and (min-width : 769px){
+        display: none;
+    }
+`
+export const SettingToggle = styled(Button)`
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(73 74 76);
+    border-radius: 50%;
+    transition: all 0.2s linear;
+    font-size: 18px;
+    position: relative;
+    #Mobile_Message{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height:100%;
+        border-radius: 50%;
+    }
+    &:active{
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    }
+`
+
+export const ListContaienr = styled(Div)`
+    z-index: 10;
+    position: absolute;
+    right: 0px;
+    padding: 10px 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background: #fff;
+    border-radius: 8px;
+    top: ${({ top }) => top};
+    transition:  ${({ delay }) => `${delay}s`} all  ease-in-out;
+    visibility: ${({ show }) => show};
+`
+export const ActionList = styled(Button)`
+    white-space: pre;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    color: rgb(45, 66, 81);
+    align-items: center;
+    span{
+        font-size: 14px;
+        padding-left: 5px;
+        font-family: 'Poppins', sans-serif;
+    }
+    &:hover{
+        background: rgb(250, 250, 250);
+    }
+`
 export const BackArrow = styled(Button)`
     width: 40px;
     height: 40px;
