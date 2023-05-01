@@ -53,7 +53,7 @@ const ChatMode = () => {
             return `${dayOfWeek} ${time}`;
         }
     }
-    
+
     const getFriendProfile = (payload) => {
         //  for fetch curChat and fix Socket.connection issue when contact's refresh the page
         const { contact } = payload
@@ -63,12 +63,14 @@ const ChatMode = () => {
         axios.get(`${BaseUrl}/receiver/${contact}`, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {
-            const { image, chatID, lastSeen, isOnline } = response?.data?.data
+            const { image, chatID, lastSeen, isOnline, f_name, l_name } = response?.data?.data
             dispatch(currentChat({
                 chatID,
                 contact,
                 lastSeen: getLastSeenFormatted(lastSeen),
                 isOnline,
+                l_name,
+                f_name,
                 image: image.startsWith('https://') ? image : `${BaseUrl}${image}`
             }))
             dispatch(isMobileActive(false))
@@ -178,11 +180,11 @@ const ChatMode = () => {
                                 setCurContext(curUser)
                             }} id='' title=''>
                                 <UserChatDp>
-                                    <Image src={curUser?.image.startsWith('https://') ? curUser?.image : `${BaseUrl}${curUser?.image}`} />
+                                    <Image src={curUser?.image?.startsWith('https://') ? curUser?.image : `${BaseUrl}${curUser?.image}`} />
                                 </UserChatDp>
                                 <ChatLinkContainer>
                                     <UserInfo onClick={() => getFriendProfile(curUser)}>
-                                        <UserName>{curUser?.contact}</UserName>
+                                        <UserName>{curUser?.f_name} {curUser?.l_name} </UserName>
                                         <ChatPreview>
                                             last seen 10:12 PM
                                         </ChatPreview>

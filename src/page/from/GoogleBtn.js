@@ -23,11 +23,16 @@ const GoogleBtn = () => {
     })
 
     const handleSuccess = (response) => {
+        const { googleId, email, imageUrl, name } = response?.profileObj
+        const f_name = name.split(' ')[0]
+        const l_name = name.split(' ')[1]
         const googleData = {
-            password: response.profileObj?.googleId,
-            email: response.profileObj?.email,
-            username: response.profileObj?.email.split("@")[0],
-            profile_image: response.profileObj?.imageUrl,
+            password: googleId,
+            email: email,
+            f_name,
+            l_name,
+            username: email.split("@")[0],
+            profile_image: imageUrl,
         }
         axios.post(`${BaseUrl}/google_auth`, googleData).then((res) => {
             const { username, token } = res?.data

@@ -33,23 +33,29 @@ const Signup = () => {
     const [file, setFile] = useState()
     const [loginData, setLoginData] = useState('')
     // error state manage 
-    const [error, setError] = useState({
+
+    const initialValue = {
         email: "",
         password: '',
         username: '',
-        otp: ''
-    })
+        otp: '',
+        f_name: '',
+        l_name: ''
+    }
+    const [error, setError] = useState(initialValue)
 
     // form state manage 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: '',
-        username: '',
-        otp: ''
-    })
+    const [formData, setFormData] = useState(initialValue)
 
     const handalChange = event => {
         const { name, value } = event.target
+        setError({
+            ...error,
+            [name]: ''
+        })
+        if (value === '') {
+
+        }
         setFormData({
             ...formData,
             [name]: value
@@ -66,30 +72,46 @@ const Signup = () => {
     }
 
     const sendOtp = async () => {
-        const { email } = formData
+        const { email, f_name, l_name } = formData
         try {
-            if (email) {
-                if (!isValidEmail(email)) {
-                    throw new Error('Enter valid email')
-                }
-                setIsLoader(true)
-                axios.post(`${BaseUrl}/sendotp`, { email }).then((respoce) => {
-                    if (respoce.data.status) {
-                        setError({
-                            email: null
-                        })
-                        setIsOtp(true)
-                        setIsLoader(false)
-                    }
-                }).catch((error) => {
-                    setError({
-                        email: error?.response?.data?.message
-                    })
-                    setIsLoader(false)
+            if (!f_name && !l_name) {
+                setError({
+                    f_name: 'first name is required',
+                    l_name: 'last name is required'
+                })
+            } else if (!f_name) {
+                setError({
+                    f_name: 'first name is required',
+                })
+            } else if (!l_name) {
+                setError({
+                    f_name: 'first name is required',
                 })
             } else {
-                throw new Error('email is required')
+                if (email) {
+                    if (!isValidEmail(email)) {
+                        throw new Error('Enter valid email')
+                    }
+                    setIsLoader(true)
+                    axios.post(`${BaseUrl}/sendotp`, { email, f_name, l_name }).then((respoce) => {
+                        if (respoce.data.status) {
+                            setError({
+                                email: null
+                            })
+                            setIsOtp(true)
+                            setIsLoader(false)
+                        }
+                    }).catch((error) => {
+                        setError({
+                            email: error?.response?.data?.message
+                        })
+                        setIsLoader(false)
+                    })
+                } else {
+                    throw new Error('email is required')
+                }
             }
+
         } catch (error) {
             setIsLoader(false)
             setError({
@@ -204,8 +226,6 @@ const Signup = () => {
         setError({})
     }
 
-
-
     // handal submit 
     const register = (finalData) => {
         axios.post(`${BaseUrl}/update_profile_picture`, finalData, {
@@ -282,6 +302,21 @@ const Signup = () => {
                             {
                                 (step === "email") && <>
                                     {/* Email */}
+                                    <div className="field input-field">
+                                        <input type="text" value={formData?.f_name} name="f_name"
+                                            placeholder="First Name" className="input input-contaroll"
+                                            onChange={handalChange} suggested="current-f_name"
+                                        />
+                                    </div>
+                                    {error?.f_name && <span className='error'>{error?.f_name}</span>}
+
+                                    <div className="field input-field">
+                                        <input type="text" value={formData?.l_name} name="l_name"
+                                            placeholder="Last Name" className="input input-contaroll"
+                                            onChange={handalChange} suggested="current-l_name"
+                                        />
+                                    </div>
+                                    {error?.l_name && <span className='error'>{error?.l_name}</span>}
                                     <div className="field input-field">
                                         <input type="email" value={formData?.email} name="email"
                                             placeholder="Email" className="input input-contaroll"
