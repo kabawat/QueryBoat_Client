@@ -10,9 +10,9 @@ import { BsPin } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-import { chat_List, clean_message, currentChat, delete_message, fetch_chat, isMobileActive } from '../../redux/action'
+import { chat_List, currentChat, isMobileActive, recive_message } from '../../redux/action'
 const ChatMode = () => {
-    const { chatList, curChat, BaseUrl } = useSelector(state => state)
+    const { chatList, curChat, BaseUrl, chatUrl } = useSelector(state => state)
     const dispatch = useDispatch()
     const [isNewChatModal, setIsNewChatModal] = useState(false)
     const [cookies] = useCookies()
@@ -54,12 +54,14 @@ const ChatMode = () => {
         }
     }
 
-    const getFriendProfile = (payload) => {
+    const getFriendProfile = async (payload) => {
         //  for fetch curChat and fix Socket.connection issue when contact's refresh the page
         const { contact } = payload
         localStorage.setItem('curUser', contact)
-        dispatch(fetch_chat(contact))
-
+        await axios.post(`${chatUrl}/get_chat`, { chatFile: payload?.chatFile }).then((res) => {
+            const { data } = res?.data
+            dispatch(recive_message(data))
+        })
         axios.get(`${BaseUrl}/receiver/${contact}`, {
             headers: { token: cookies?.auth?.token }
         }).then((response) => {
@@ -71,7 +73,8 @@ const ChatMode = () => {
                 isOnline,
                 l_name,
                 f_name,
-                image: image.startsWith('https://') ? image : `${BaseUrl}${image}`
+                image: image.startsWith('https://') ? image : `${BaseUrl}${image}`,
+                chatFile: payload?.chatFile
             }))
             dispatch(isMobileActive(false))
         }).catch(error => {
@@ -122,7 +125,6 @@ const ChatMode = () => {
                         isOnline: ''
                     }))
                 }
-                dispatch(delete_message(contact))
             }).catch((error) => {
                 console.log(error?.response)
             })
@@ -133,8 +135,7 @@ const ChatMode = () => {
 
     // handal clean chat 
     const handleClean = () => {
-        const { contact } = curContext
-        dispatch(clean_message(contact))
+
     }
 
     return (

@@ -8,11 +8,12 @@ import { AiOutlineStar } from 'react-icons/ai'
 import { HiReply, HiOutlineCloudDownload } from 'react-icons/hi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { TbArrowForwardUp } from 'react-icons/tb'
-import { delete_Current_Message } from '../../redux/action'
 import { useRef } from 'react'
+import axios from 'axios'
+import { recive_message } from '../../redux/action'
 
 const ChatArea = () => {
-    const { chatMessage, userProfile, BaseUrl, curChat } = useSelector(state => state)
+    const { userProfile, chatMessage, chatUrl, curChat, socket } = useSelector(state => state)
     const [conActive, setConActive] = useState(false)
     const innerChatArea = useRef(null)
     const [curMessage, setCurMessage] = useState({
@@ -62,8 +63,11 @@ const ChatArea = () => {
     })
 
     // handle delete individual message 
-    const hadaleDeleteMsg = () => {
-        Dispatch(delete_Current_Message(curMessage?.time))
+    const hadaleDeleteMsg = async () => {
+        axios.post(`${chatUrl}/delete_message`, { date: curMessage?.time, chatFile: curChat?.chatFile }).then((res) => {
+            const { data } = res?.data
+            Dispatch(recive_message(data))
+        })
     }
 
     // copy clipboard 
@@ -78,20 +82,26 @@ const ChatArea = () => {
 
     // download file 
     const downloadFile = () => {
-        const url = curMessage?.file;
-        const link = document.createElement("a");
-        link.setAttribute("target", "_blank");
-        link.href = url;
-        link.setAttribute("download", url.split("/")[5]); // you can set the filename here
-        document.body.appendChild(link);
-        link.click();
-        setReaction('Saved!')
-        setIsReact(true)
-        setTimeout(() => {
-            setIsReact(false)
-        }, 1200)
+        const url = `${chatUrl}${curMessage?.file}`;
+        fetch(url).then((response) => {
+            response.arrayBuffer().then((buffer) => {
+                const fileUrl = window.URL.createObjectURL(new Blob([buffer]));
+                const fileLink = document.createElement('a');
+                fileLink.href = fileUrl;
+                fileLink.setAttribute("download", `queryboat-${url.split("/")[3]}-${url.split("/")[4]}`)
+                document.body.appendChild(fileLink);
+                fileLink.click();
+
+                setReaction('Saved!')
+                setIsReact(true)
+                setTimeout(() => {
+                    setIsReact(false)
+                }, 1200)
+            });
+        })
     }
-    
+
+
     // scroll 
     const scroll = useRef(null)
     useEffect(() => {
@@ -149,25 +159,25 @@ const ChatArea = () => {
                     </Button>
                 </ContextAction>
             </ContextContainer>
-            {/* ------------------ */}
+            {/* ------------------ */
+            }
             {
                 chatMessage?.length ? chatMessage?.map((curMsg, keys) => {
-                    const { message, isMe, time, msgType, file } = curMsg
-                    const image = isMe ? `${BaseUrl}${userProfile?.profile_image}` : curChat?.image
+                    const { message, sender, time, msgType, file } = curMsg
                     const date = new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
                     return (
-                        <ChatBox isMe={isMe} key={keys}>
+                        <ChatBox isMe={sender === userProfile?.username} key={keys}>
                             {
-                                !isMe && <ChatDp>
-                                    <Image src={image} />
+                                !(sender === userProfile?.username) && <ChatDp>
+                                    <Image src={curChat?.image} />
                                 </ChatDp>
                             }
 
                             <MessageOuter onContextMenu={(event) => {
                                 handaleContextMenu(event)
                                 handleCurrentMessage({ ...curMsg, keys })
-                            }} isMe={isMe}>
-                                {msgType === "text" && <Message isMe={isMe} >
+                            }} isMe={sender === userProfile?.username}>
+                                {msgType === "text" && <Message isMe={sender === userProfile?.username} >
                                     <Msg>
                                         {message}
                                     </Msg>
@@ -180,7 +190,7 @@ const ChatArea = () => {
                                         <Msg>
                                             <Video>
                                                 <video controls>
-                                                    <source src={file} type="video/mp4" />
+                                                    <source src={`${chatUrl}${file}`} type="video/mp4" />
                                                 </video>
                                             </Video >
                                             <MsgContant>
@@ -198,7 +208,7 @@ const ChatArea = () => {
                                     msgType === 'image' && <VideoMsg isMe={false} >
                                         <Msg>
                                             <ChatImage>
-                                                <img src={file} />
+                                                <img src={`${chatUrl}${file}`} />
                                             </ChatImage>
                                             <MsgContant>
                                                 {

@@ -11,7 +11,7 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
     const { mouse } = state
     const [cookies] = useCookies()
     const dispatch = useDispatch()
-    const { BaseUrl, contactlist, userProfile, } = useSelector(state => state)
+    const { BaseUrl, contactlist, userProfile, chatUrl } = useSelector(state => state)
     const [isLoader, setLoader] = useState(false)
     const handleFinish = () => {
         setIsNewChatModal(false)
@@ -33,11 +33,15 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
                 handleFinish()
             }).catch((error) => {
                 handleFinish()
-                console.log(error?.response)
             })
+
+            axios.post(`${chatUrl}/create_newChat_File`, { chatFile: response?.data?.chatFile }).then((res) => {
+            }).catch((error) => {
+
+            })
+
         }).catch((error) => {
             handleFinish()
-            console.log(error?.response)
         })
     }
     useEffect(() => {
@@ -64,7 +68,7 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
                                 <NewUserDp>
                                     <Image src={curChat?.profile_image.startsWith('https://') ? curChat?.profile_image : `${BaseUrl}${curChat?.profile_image}`} />
                                 </NewUserDp>
-                                <div>   
+                                <div>
                                     <NewUserName>
                                         {curChat?.username}
                                     </NewUserName>

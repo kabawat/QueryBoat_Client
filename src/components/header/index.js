@@ -3,7 +3,7 @@ import { Image } from '../../style'
 import { HeaderSection, UserDetails, UserDp, UserInfo, UserName, UserStatus, BackArrow, SettingSection, SettingToggle, ListContaienr, ActionList } from '../style'
 import { BsArrowLeft } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { clean_message, isMobileActive } from '../../redux/action';
+import { isMobileActive } from '../../redux/action';
 import { HiDotsVertical } from 'react-icons/hi'
 import { useState } from 'react';
 import { AiOutlineClear } from 'react-icons/ai'
@@ -13,6 +13,7 @@ const HeaderBody = () => {
     const { curChat } = useSelector(state => state)
     const HandleTotalAside = () => {
         dispatch(isMobileActive(true))
+        localStorage.clear()
     }
     const [showList, setShowList] = useState(false)
     window.addEventListener('click', event => {
@@ -22,8 +23,7 @@ const HeaderBody = () => {
     })
 
     const handleClean = () => {
-        const { contact } = curChat
-        dispatch(clean_message(contact))
+
     }
 
     return (

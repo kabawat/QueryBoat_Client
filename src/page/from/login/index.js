@@ -105,7 +105,6 @@ const Login = () => {
                     getAllChat(token, username)
                     setIsLoader(false)
                 }).catch((error) => {
-                    console.log(error)
                     setIsLoader(false)
                 })
             }).catch((error) => {

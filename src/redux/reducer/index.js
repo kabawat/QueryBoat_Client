@@ -1,11 +1,12 @@
 import { combineReducers } from "redux";
 import { asideAction, asideMobile } from "./hideShow";
 import { userProfile } from "./profile";
-import socket, { BaseUrl, contactlist, chatList, curChat } from './scoket'
+import socket, { BaseUrl, contactlist, chatList, curChat, chatUrl } from './scoket'
 import chatMessage from './chating'
 const rootReducer = combineReducers(
     {
         BaseUrl,
+        chatUrl,
         userProfile,
         asideAction,
         asideMobile,

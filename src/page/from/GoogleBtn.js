@@ -34,7 +34,7 @@ const GoogleBtn = () => {
             username: email.split("@")[0],
             profile_image: imageUrl,
         }
-        axios.post(`${BaseUrl}/google_auth`, googleData).then((res) => {
+        axios.post(`${BaseUrl}/google_signin`, googleData).then((res) => {
             const { username, token } = res?.data
             axios.get(`${BaseUrl}/profile/${username}`, {
                 headers: { token: token }

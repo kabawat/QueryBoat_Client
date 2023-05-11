@@ -11,11 +11,11 @@ import FooterBody from '../../components/footer'
 import { Aside, ChatContainer, Container, Header, Main, Footer, ChatAreaContainer } from './style'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
-import { chat_List, myProfile, store_message } from '../../redux/action'
+import { chat_List, myProfile, recive_message } from '../../redux/action'
 import axios from 'axios'
 import ring from './ring02.mp3'
 const Home = () => {
-    const { BaseUrl, curChat, chatList, asideMobile, socket } = useSelector(state => state)
+    const { BaseUrl, curChat, chatList, chatUrl, asideMobile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
     const [cookies, , removeCookies] = useCookies()
     const dispatch = useDispatch()
@@ -42,6 +42,7 @@ const Home = () => {
                 headers: { token: token }
             }).then((res) => {
                 dispatch(chat_List(res?.data?.data))
+                localStorage.clear()
             }).catch((error) => {
 
             })
@@ -50,48 +51,50 @@ const Home = () => {
         }
     }, [BaseUrl, cookies])
 
+    // Handle 'Received Message' event
+    const handleReceivedMessage = (chat) => {
+        var audio = new Audio(ring);
+        audio.play();
+        if (chatList !== null) {
+            const isExist = chatList.some(person => person.contact === chat?.receiver)
+            if (isExist === false) {
+                const chatSchema = {
+                    username: cookies?.auth?.username,
+                    contact: chat?.receiver,
+                    chatFile: chat?.chatFile
+                }
+                axios.post(`${BaseUrl}/new_chat_request`, chatSchema, {
+                    headers: { token: cookies?.auth?.token }
+                }).then((response) => {
+                    axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
+                        headers: { token: cookies?.auth?.token }
+                    }).then((res) => {
+                        dispatch(chat_List(res?.data?.data))
+                    }).catch((error) => {
+                        console.log(error?.response)
+                    })
+                }).catch((error) => {
+                    console.log(error?.response)
+                })
+            }
+
+            if (chat?.receiver === localStorage.getItem('curUser')) {
+                axios.post(`${chatUrl}/get_chat`, { chatFile: chat?.chatFile }).then((res) => {
+                    const { data } = res?.data
+                    dispatch(recive_message(data))
+                })
+            }
+
+        } else {
+            console.log('chatList is null');
+        }
+    };
+
     useEffect(() => {
         // Only emit 'refresh' event if cookies.auth is present
         if (cookies?.auth) {
             socket.emit('refresh', cookies.auth.username);
         }
-
-        // Handle 'Received Message' event
-        const handleReceivedMessage = (chat) => {
-            var audio = new Audio(ring);
-            audio.play();
-            if (chatList !== null) {
-                const isExist = chatList.some(person => person.contact === chat?.contact)
-                if (isExist === false) {
-                    const chatSchema = {
-                        username: cookies?.auth?.username,
-                        contact: chat?.contact
-                    }
-                    axios.post(`${BaseUrl}/new_chat`, chatSchema, {
-                        headers: { token: cookies?.auth?.token }
-                    }).then((response) => {
-                        axios.get(`${BaseUrl}/chatList/${cookies?.auth?.username}`, {
-                            headers: { token: cookies?.auth?.token }
-                        }).then((res) => {
-                            dispatch(chat_List(res?.data?.data))
-                        }).catch((error) => {
-                            console.log(error?.response)
-                        })
-                    }).catch((error) => {
-                        console.log(error?.response)
-                    })
-                }
-                dispatch(store_message(chat?.contact, {
-                    message: chat?.message,
-                    time: chat?.time,
-                    msgType: chat?.msgType,
-                    file: chat?.file,
-                    isMe: false
-                }));
-            } else {
-                console.log('chatList is null');
-            }
-        };
         socket.on('Received Message', handleReceivedMessage);
         // Clean up event listener when component unmounts
         return () => {

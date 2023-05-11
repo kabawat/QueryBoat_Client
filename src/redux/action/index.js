@@ -46,39 +46,11 @@ export const chat_List = (payload) => {
 }
 
 // fetch chat 
-export const fetch_chat = (payload) => {
-    return {
-        type: 'GET_CHAT',
-        payload
-    }
-}
 
 // store messge in localStorage 
-export const store_message = (user, payload) => {
+export const recive_message = (payload) => {
     return {
-        type: 'STORE_MESSAGE',
+        type: 'RECEIVE_MESSAGE',
         payload,
-        user,
-    }
-}
-// delete all massage 
-export const delete_message = (payload) => {
-    return {
-        type: 'DELETE_MESSAGE',
-        payload,
-    }
-}
-export const delete_Current_Message = (payload) => {
-    return {
-        type: 'DELETE_CURRENT_MESSAGE',
-        payload,
-    }
-}
-
-// clean chat message 
-export const clean_message = (payload) => {
-    return {
-        type: 'CLEAN_MESSAGE',
-        payload
     }
 }
