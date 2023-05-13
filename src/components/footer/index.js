@@ -115,7 +115,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList type='button' show={showFile}>
-                        <input type="file" id='picture' name="picture" accept='image/*' disabled onChange={handleFileChange} />
+                        <input type="file" id='picture' name="picture" accept='image/*' onChange={handleFileChange} />
                         <FileIcon>
                             <BiImages />
                             <Label htmlFor='picture'></Label>
@@ -123,7 +123,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList type='button' show={showFile}>
-                        <input type="file" id='video' name="video" accept='video/*' disabled onChange={handleFileChange} />
+                        <input type="file" id='video' name="video" accept='video/*' onChange={handleFileChange} />
                         <FileIcon>
                             <IoVideocamOutline />
                             <Label htmlFor='video'></Label>

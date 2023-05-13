@@ -64,7 +64,7 @@ const ChatArea = () => {
 
     // handle delete individual message 
     const hadaleDeleteMsg = async () => {
-        axios.post(`${BaseUrl}/delete_message`, { id: curMessage?._id, chatFile: curChat?.chatFile }).then((res) => {
+        axios.post(`${BaseUrl}/delete_message`, { id: curMessage?._id, chatFile: curChat?.chatFile, file: curMessage?.file }).then((res) => {
             axios.post(`${BaseUrl}/get_message`, { chatFile: curChat?.chatFile }).then((res) => {
                 const { data } = res?.data
                 Dispatch(recive_message(data))
