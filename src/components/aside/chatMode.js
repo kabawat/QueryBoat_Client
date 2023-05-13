@@ -12,7 +12,7 @@ import { useCookies } from 'react-cookie'
 import axios from 'axios'
 import { chat_List, currentChat, isMobileActive, recive_message } from '../../redux/action'
 const ChatMode = () => {
-    const { chatList, curChat, BaseUrl, chatUrl } = useSelector(state => state)
+    const { chatList, curChat, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
     const [isNewChatModal, setIsNewChatModal] = useState(false)
     const [cookies] = useCookies()
@@ -58,7 +58,7 @@ const ChatMode = () => {
         //  for fetch curChat and fix Socket.connection issue when contact's refresh the page
         const { contact } = payload
         localStorage.setItem('curUser', contact)
-        await axios.post(`${chatUrl}/get_chat`, { chatFile: payload?.chatFile }).then((res) => {
+        await axios.post(`${BaseUrl}/get_message`, { chatFile: payload?.chatFile }).then((res) => {
             const { data } = res?.data
             dispatch(recive_message(data))
         })

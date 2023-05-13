@@ -13,7 +13,7 @@ import axios from 'axios'
 import { recive_message } from '../../redux/action'
 
 const ChatArea = () => {
-    const { userProfile, chatMessage, chatUrl, curChat, socket } = useSelector(state => state)
+    const { userProfile, chatMessage, BaseUrl, curChat, socket } = useSelector(state => state)
     const [conActive, setConActive] = useState(false)
     const innerChatArea = useRef(null)
     const [curMessage, setCurMessage] = useState({
@@ -64,9 +64,11 @@ const ChatArea = () => {
 
     // handle delete individual message 
     const hadaleDeleteMsg = async () => {
-        axios.post(`${chatUrl}/delete_message`, { date: curMessage?.time, chatFile: curChat?.chatFile }).then((res) => {
-            const { data } = res?.data
-            Dispatch(recive_message(data))
+        axios.post(`${BaseUrl}/delete_message`, { id: curMessage?._id, chatFile: curChat?.chatFile }).then((res) => {
+            axios.post(`${BaseUrl}/get_message`, { chatFile: curChat?.chatFile }).then((res) => {
+                const { data } = res?.data
+                Dispatch(recive_message(data))
+            })
         })
     }
 
@@ -82,7 +84,7 @@ const ChatArea = () => {
 
     // download file 
     const downloadFile = () => {
-        const url = `${chatUrl}${curMessage?.file}`;
+        const url = `${BaseUrl}${curMessage?.file}`;
         fetch(url).then((response) => {
             response.arrayBuffer().then((buffer) => {
                 const fileUrl = window.URL.createObjectURL(new Blob([buffer]));
@@ -190,7 +192,7 @@ const ChatArea = () => {
                                         <Msg>
                                             <Video>
                                                 <video controls>
-                                                    <source src={`${chatUrl}${file}`} type="video/mp4" />
+                                                    <source src={`${BaseUrl}${file}`} type="video/mp4" />
                                                 </video>
                                             </Video >
                                             <MsgContant>
@@ -208,7 +210,7 @@ const ChatArea = () => {
                                     msgType === 'image' && <VideoMsg isMe={false} >
                                         <Msg>
                                             <ChatImage>
-                                                <img src={`${chatUrl}${file}`} />
+                                                <img src={`${BaseUrl}${file}`} />
                                             </ChatImage>
                                             <MsgContant>
                                                 {

@@ -8,12 +8,6 @@ export const BaseUrl = (state = url, action) => {
     return state
 }
 
-// const chat = 'http://localhost:1729'
-const chat = 'https://message-api-ufwp.onrender.com'
-export const chatUrl = (state = chat, action) => {
-    return state
-}
-
 // socket  handler 
 const socketInit = io(url)
 const socket = (state = socketInit, action) => {

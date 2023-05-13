@@ -34,12 +34,6 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
             }).catch((error) => {
                 handleFinish()
             })
-
-            axios.post(`${chatUrl}/create_newChat_File`, { chatFile: response?.data?.chatFile }).then((res) => {
-            }).catch((error) => {
-
-            })
-
         }).catch((error) => {
             handleFinish()
         })

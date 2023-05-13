@@ -11,7 +11,7 @@ import { BsTrash } from 'react-icons/bs'
 import axios from 'axios';
 import VideoPreview from './video-preview';
 const FooterBody = () => {
-    const { socket, curChat, userProfile, chatUrl } = useSelector(state => state)
+    const { socket, curChat, userProfile, BaseUrl, chatUrl } = useSelector(state => state)
     const dispatch = useDispatch()
     const [showFile, setShowFile] = useState(false)
     const [typeMsg, setTypeMsg] = useState('')
@@ -56,16 +56,16 @@ const FooterBody = () => {
             if (sendFile) {
                 formData.append("file", sendFile)
             }
-            axios.post(`${chatUrl}/send_message`, formData).then((res) => {
+            axios.post(`${BaseUrl}/send_message`, formData).then((res) => {
                 const data = {
+                    chatID: res?.data?.chatID,
                     chatFile: curChat?.chatFile,
-                    chatID: curChat?.chatID,
                     sender: {
                         username: userProfile?.username,
                         chatID: socket.id
                     },
                 }
-                axios.post(`${chatUrl}/get_chat`, { chatFile: curChat?.chatFile }).then((res) => {
+                axios.post(`${BaseUrl}/get_message`, { chatFile: curChat?.chatFile }).then((res) => {
                     const { data } = res?.data
                     dispatch(recive_message(data))
                 })
@@ -115,7 +115,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList type='button' show={showFile}>
-                        <input type="file" id='picture' name="picture" accept='image/*' onChange={handleFileChange} />
+                        <input type="file" id='picture' name="picture" accept='image/*' disabled onChange={handleFileChange} />
                         <FileIcon>
                             <BiImages />
                             <Label htmlFor='picture'></Label>
@@ -123,7 +123,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList type='button' show={showFile}>
-                        <input type="file" id='video' name="video" accept='video/*' onChange={handleFileChange} />
+                        <input type="file" id='video' name="video" accept='video/*' disabled onChange={handleFileChange} />
                         <FileIcon>
                             <IoVideocamOutline />
                             <Label htmlFor='video'></Label>

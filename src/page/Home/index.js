@@ -15,7 +15,7 @@ import { chat_List, myProfile, recive_message } from '../../redux/action'
 import axios from 'axios'
 import ring from './ring02.mp3'
 const Home = () => {
-    const { BaseUrl, curChat, chatList, chatUrl, asideMobile, socket } = useSelector(state => state)
+    const { BaseUrl, curChat, chatList, asideMobile, socket } = useSelector(state => state)
     const [isRender, setIsRender] = useState(false)
     const [cookies, , removeCookies] = useCookies()
     const dispatch = useDispatch()
@@ -77,14 +77,12 @@ const Home = () => {
                     console.log(error?.response)
                 })
             }
-
             if (chat?.receiver === localStorage.getItem('curUser')) {
-                axios.post(`${chatUrl}/get_chat`, { chatFile: chat?.chatFile }).then((res) => {
+                axios.post(`${BaseUrl}/get_message`, { chatFile: chat?.chatFile }).then((res) => {
                     const { data } = res?.data
                     dispatch(recive_message(data))
                 })
             }
-
         } else {
             console.log('chatList is null');
         }
