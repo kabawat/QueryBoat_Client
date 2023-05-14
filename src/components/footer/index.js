@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title, ImagePreview, SelectedFileAction, SelectedInner, ActionButton, } from '../style'
+import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title, ImagePreview, SelectedFileAction, SelectedInner, ActionButton, AudioPreviewBox, } from '../style'
 import { BsPlusLg, BsFileEarmarkPdf } from 'react-icons/bs';
 import { IoSendSharp, IoVideocamOutline } from 'react-icons/io5';
 import { IoIosMusicalNotes } from 'react-icons/io';
@@ -10,6 +10,7 @@ import Ring from './ring01.mp3'
 import { BsTrash } from 'react-icons/bs'
 import axios from 'axios';
 import VideoPreview from './video-preview';
+import AudioPreview from './audio-preview';
 const FooterBody = () => {
     const { socket, curChat, userProfile, BaseUrl, chatUrl } = useSelector(state => state)
     const dispatch = useDispatch()
@@ -85,6 +86,9 @@ const FooterBody = () => {
     }
     return (
         <FooterContaienr onSubmit={sendHandal}>
+            {
+                sendFile && msgType === "audio" && <AudioPreview audioFile={sendFile} clearSelectFile={clearSelectFile} />
+            }
             {sendFile && <ImagePreview>
                 <SelectedInner>
                     {
@@ -93,6 +97,7 @@ const FooterBody = () => {
                     {
                         msgType === "video" && <VideoPreview videoFile={sendFile} />
                     }
+
                     <SelectedFileAction>
                         <ActionButton type="button" onClick={clearSelectFile}>
                             <BsTrash />
@@ -100,6 +105,7 @@ const FooterBody = () => {
                     </SelectedFileAction>
                 </SelectedInner>
             </ImagePreview>}
+
             {/* left  */}
             <FileContainer>
                 <SelectButton type='button' x={showFile ? 45 : 0} onClick={() => setShowFile(!showFile)}>
@@ -131,7 +137,7 @@ const FooterBody = () => {
                         </FileIcon>
                     </FileList>
                     <FileList type='button' show={showFile}>
-                        <input type="file" id='music' name="music" accept=".mp3" disabled />
+                        <input type="file" id='music' name="audio" accept=".mp3" onChange={handleFileChange} />
                         <FileIcon>
                             <IoIosMusicalNotes />
                             <Label htmlFor='music'></Label>

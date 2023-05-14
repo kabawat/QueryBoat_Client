@@ -136,7 +136,58 @@ export const ImagePreview = styled.div`
     padding: 5px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     
-    `
+`
+export const AudioPreviewBox = styled.div`
+     width: 325px;
+    height: 45px;
+    position: absolute;
+    bottom:105%;
+    overflow: hidden;
+    left:20px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 5px;
+    display:flex;
+    justify-content: space-between;
+    padding-right: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+`
+
+export const AudioMsgBox = styled.div`
+    width: 100%;
+    height: auto;
+`
+export const AudioMessage = styled.div`
+    width:280px;
+    height: 45px;
+    overflow: hidden;
+    left:20px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 5px;
+    display:flex;
+    justify-content: flex-start;
+    padding-right: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+
+    @media screen and (max-width:426px) {
+     width: 240px   
+    }
+`
+export const PlayButton = styled(Button)`
+    min-width: 35px;
+    max-width: 35px;
+    min-height: 35px;
+    max-height: 35px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+`
+export const AudioInput = styled.input`
+    width: 80%;
+`
 export const SelectedFileAction = styled.div`
     width: 100%;
     position: absolute;
@@ -569,8 +620,23 @@ export const VideoTime = styled(Div)`
     color: #999;
     padding: 0px 10px;
 `
+export const AudioTime = styled(Div)` 
+    bottom: 5px;
+    right: 0px;
+    font-size: 12px;
+    text-align: right;
+    color: #999;
+    padding: 5px 10px;
+`
 export const VideoDesc = styled(Div)`  //3
     width: 100%;
     text-align: justify;
     padding: 5px 10px;
+`
+export const AudioDesc = styled(Div)`  //3
+    width: 100%;
+    text-align: justify;
+    padding-left: 30px;
+    padding-bottom: 15px;
+    padding-right: 20px;
 `

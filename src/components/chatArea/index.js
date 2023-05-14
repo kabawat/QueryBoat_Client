@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime, ChatImage } from '../style'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime, ChatImage, AudioMsgBox, AudioTime, AudioDesc } from '../style'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { MdContentCopy, MdOutlineAddReaction } from 'react-icons/md'
@@ -11,6 +11,7 @@ import { TbArrowForwardUp } from 'react-icons/tb'
 import { useRef } from 'react'
 import axios from 'axios'
 import { recive_message } from '../../redux/action'
+import AudioPlayer from './AudioPlayer'
 
 const ChatArea = () => {
     const { userProfile, chatMessage, BaseUrl, curChat, socket } = useSelector(state => state)
@@ -226,7 +227,27 @@ const ChatArea = () => {
                                         </Msg>
                                     </VideoMsg>
                                 }
-                                {/* <HiddenInput /> */}
+                                {
+                                    msgType === 'audio' && <AudioMsgBox isMe={false} >
+                                        <Msg>
+                                            <AudioPlayer audioFile={`${BaseUrl}${file}`} />
+                                            <MsgContant>
+                                                {
+                                                    message ? <>
+                                                        <AudioDesc>
+                                                            {message}
+                                                        </AudioDesc>
+                                                        <VideoTime>
+                                                            {date}
+                                                        </VideoTime>
+                                                    </> : <AudioTime>{date}</AudioTime>
+                                                }
+
+
+                                            </MsgContant>
+                                        </Msg>
+                                    </AudioMsgBox>
+                                }
                             </MessageOuter>
                             <ClipBoard active={curMessage?.keys === keys && isReact ? true : false}>
                                 {reaction}
