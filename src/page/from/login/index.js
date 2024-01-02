@@ -24,7 +24,7 @@ const Login = () => {
         } else {
             navigate('/')
         }
-    }, [cookies])
+    }, [cookies, navigate])
 
     function isValidEmail(email) {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

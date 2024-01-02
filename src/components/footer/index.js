@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title, ImagePreview, SelectedFileAction, SelectedInner, ActionButton, AudioPreviewBox, } from '../style'
+import { FooterContaienr, FileContainer, ChatTypeContaienr, ChatActionCotainer, Label, SelectButton, SelectFileBox, Chat, Send, FileList, FileIcon, Title, ImagePreview, SelectedFileAction, SelectedInner, ActionButton, } from '../style'
 import { BsPlusLg, BsFileEarmarkPdf } from 'react-icons/bs';
 import { IoSendSharp, IoVideocamOutline } from 'react-icons/io5';
 import { IoIosMusicalNotes } from 'react-icons/io';
@@ -12,7 +12,7 @@ import axios from 'axios';
 import VideoPreview from './video-preview';
 import AudioPreview from './audio-preview';
 const FooterBody = () => {
-    const { socket, curChat, userProfile, BaseUrl, chatUrl } = useSelector(state => state)
+    const { socket, curChat, userProfile, BaseUrl } = useSelector(state => state)
     const dispatch = useDispatch()
     const [showFile, setShowFile] = useState(false)
     const [typeMsg, setTypeMsg] = useState('')
@@ -92,7 +92,7 @@ const FooterBody = () => {
             {sendFile && <ImagePreview>
                 <SelectedInner>
                     {
-                        msgType === "image" && <img src={fileLink} />
+                        msgType === "image" && <img alt={userProfile?.username} src={fileLink} />
                     }
                     {
                         msgType === "video" && <VideoPreview videoFile={sendFile} />

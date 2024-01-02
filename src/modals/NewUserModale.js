@@ -11,7 +11,7 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
     const { mouse } = state
     const [cookies] = useCookies()
     const dispatch = useDispatch()
-    const { BaseUrl, contactlist, userProfile, chatUrl } = useSelector(state => state)
+    const { BaseUrl, contactlist, userProfile } = useSelector(state => state)
     const [isLoader, setLoader] = useState(false)
     const handleFinish = () => {
         setIsNewChatModal(false)
@@ -44,7 +44,7 @@ const NewChatModal = ({ state, setIsNewChatModal }) => {
         }).then(res => {
             dispatch(all_contact(res?.data?.data))
         })
-    }, [])
+    }, [cookies, BaseUrl, dispatch,userProfile])
 
     return (
         <NewUserModale id="newChatModal">

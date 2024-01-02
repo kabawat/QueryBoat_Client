@@ -24,7 +24,7 @@ const Signup = () => {
         } else {
             setIsRender(true)
         }
-    }, [cookies])
+    }, [cookies, navigate])
 
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)
@@ -397,7 +397,7 @@ const Signup = () => {
                                 (step === "image") && <>
                                     <div className='form-image_container'>
                                         <label htmlFor='imageFile' className='form-image_profile'>
-                                            {imgFile ? <img src={imgFile} /> : <BsPlusLg />}
+                                            {imgFile ? <img alt='query boat' src={imgFile} /> : <BsPlusLg />}
                                         </label>
                                         <input id='imageFile' type='file' onChange={handalImage} accept='image/*' />
                                     </div>

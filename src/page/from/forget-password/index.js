@@ -21,7 +21,7 @@ const ForgetPwd = () => {
         } else {
             setIsRender(true)
         }
-    }, [cookies])
+    }, [cookies, navigate])
 
     const [isLoader, setIsLoader] = useState(false)
     const [isOtp, setIsOtp] = useState(false)

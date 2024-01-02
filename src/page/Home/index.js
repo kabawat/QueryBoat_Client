@@ -49,7 +49,7 @@ const Home = () => {
         } else {
             navigate('/login')
         }
-    }, [BaseUrl, cookies])
+    }, [BaseUrl, cookies, dispatch, navigate, removeCookies])
 
     // Handle 'Received Message' event
     const handleReceivedMessage = (chat) => {
@@ -98,7 +98,7 @@ const Home = () => {
         return () => {
             socket.off('Received Message', handleReceivedMessage);
         };
-    }, [socket, cookies?.auth?.username, chatList]);
+    }, [socket, cookies, chatList,]);
 
     return (
         isRender ? <Container>

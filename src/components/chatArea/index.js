@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Image, ContextAction } from '../../style'
-import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, HiddenInput, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime, ChatImage, AudioMsgBox, AudioTime, AudioDesc } from '../style'
+import { ChatBox, Message, MessageContaienr, ChatDp, Msg, Time, ContextContainer, MessageOuter, ClipBoard, NoMsgBox, VideoMsg, Video, MsgContant, VideoDesc, VideoTime, ChatImage, AudioMsgBox, AudioTime, AudioDesc } from '../style'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { MdContentCopy, MdOutlineAddReaction } from 'react-icons/md'
@@ -14,7 +14,7 @@ import { recive_message } from '../../redux/action'
 import AudioPlayer from './AudioPlayer'
 
 const ChatArea = () => {
-    const { userProfile, chatMessage, BaseUrl, curChat, socket } = useSelector(state => state)
+    const { userProfile, chatMessage, BaseUrl, curChat } = useSelector(state => state)
     const [conActive, setConActive] = useState(false)
     const innerChatArea = useRef(null)
     const [curMessage, setCurMessage] = useState({
@@ -211,7 +211,7 @@ const ChatArea = () => {
                                     msgType === 'image' && <VideoMsg isMe={false} >
                                         <Msg>
                                             <ChatImage>
-                                                <img src={`${BaseUrl}${file}`} />
+                                                <img alt={userProfile?.username} src={`${BaseUrl}${file}`} />
                                             </ChatImage>
                                             <MsgContant>
                                                 {
